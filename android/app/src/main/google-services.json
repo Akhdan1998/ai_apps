@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "195874678073",
+    "project_id": "master-ai-79740",
+    "storage_bucket": "master-ai-79740.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195874678073:android:a6dedfb489a592cd4034e8",
+        "android_client_info": {
+          "package_name": "com.parentoday.ai_apps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "195874678073-7kbaro6m3kmbosven867qs72c5lb4a5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4-9LouxIQ1SBty7zumXMtzjU5HIoG_WM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "195874678073-6nho4msl3abr3e7f423vihh4h3ekpp2i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
