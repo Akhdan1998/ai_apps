@@ -13,6 +13,8 @@ class edit extends StatefulWidget {
 class _editState extends State<edit> {
   bool isLoading = false;
 
+  String? photoUrl;
+
   final namaAndaEditingController = TextEditingController();
 
   void saveData(String namaAnda) async {
@@ -27,6 +29,7 @@ class _editState extends State<edit> {
         "Authorization": "Bearer ${widget.token}",
       },
     );
+    print('token nama ${widget.token}');
     print(response.body.toString());
     Map<String, dynamic> body = jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -47,26 +50,29 @@ class _editState extends State<edit> {
     }
   }
 
-  static Future<ApiReturnFoto<String>> uploadPhoto(File photoFile,
+  Future<ApiReturnFoto<String>> uploadPhoto(File photoFile,
       {String? token, http.MultipartRequest? request}) async {
     String url = 'https://dashboard.parentoday.com/api/user/photo';
     var uri = Uri.parse(url);
 
-    if (request == null) {
-      request = http.MultipartRequest('POST', uri)
-        ..headers["Content-Type"] = "application/json"
-        ..headers["Authorization"] = "Bearer ${token}";
-    }
+    request = http.MultipartRequest('POST', uri)
+      ..headers["Content-Type"] = "application/json"
+      ..headers["Authorization"] = "Bearer ${widget.token}";
 
     var multiPartFile =
         await http.MultipartFile.fromPath('file', photoFile.path);
     request.files.add(multiPartFile);
+
     var response = await request.send();
+
     String responseBody1 = await response.stream.bytesToString();
+
+    print('response body $responseBody1');
+
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
       var data = jsonDecode(responseBody);
-      print(responseBody.toString());
+      print('response body $responseBody');
       String imagePath = data['data'];
       return ApiReturnFoto(value: imagePath, message: '');
     } else {
@@ -143,49 +149,32 @@ class _editState extends State<edit> {
                               borderRadius: BorderRadius.circular(100),
                             ),
                           )
-                        : Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              image: const DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/mom.png'),
+                        : (widget.dataUser.profile_photo_url ==
+                                "https://dashboard.parentoday.com/storage/")
+                            ? Container(
+                                width: 120,
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage('assets/mom.png'),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: 120,
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        widget.dataUser.profile_photo_url ??
+                                            ''),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                    // child: _image != null
-                    //     ? Container(
-                    //         width: 120,
-                    //         height: 120,
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(100),
-                    //           image: DecorationImage(
-                    //             fit: BoxFit.cover,
-                    //             image: FileImage(_image!),
-                    //           ),
-                    //         ),
-                    //       )
-                    //     : (widget.dataUser.profile_photo_url ==
-                    //             "https://dashboard.parentoday.com/storage/")
-                    //         ? Container(
-                    //             width: 120,
-                    //             height: 120,
-                    //             decoration: BoxDecoration(
-                    //               color: Colors.red,
-                    //               borderRadius: BorderRadius.circular(100),
-                    //               image: const DecorationImage(
-                    //                 fit: BoxFit.cover,
-                    //                 image: AssetImage('assets/mom.png'),
-                    //               ),
-                    //             ),
-                    //           )
-                    //         : CircleAvatar(
-                    //             radius: 70,
-                    //             backgroundImage: NetworkImage(
-                    //                 widget.dataUser.profile_photo_url ?? ''),
-                    //             backgroundColor: Colors.white,
-                    //           ),
                   ),
                 ),
                 Positioned(

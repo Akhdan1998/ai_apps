@@ -12,4 +12,13 @@ class HistoryModel {
     random_id = json['random_id'];
     title = json['title'];
   }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['user_id'] = user_id;
+    data['random_id'] = random_id;
+    data['title'] = title;
+    return data;
+  }
 }

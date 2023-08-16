@@ -19,11 +19,11 @@ class _list_historyState extends State<list_history> {
           onTap: () {
             setState(() {
               selectedRandomId = widget.history!.random_id;
+              showContoh = true;
             });
             context
                 .read<AiCubit>()
                 .getAi(widget.token, widget.history!.random_id ?? '');
-
             Navigator.of(context).pop();
           },
           child: Container(
@@ -38,12 +38,15 @@ class _list_historyState extends State<list_history> {
                   children: [
                     const Icon(Icons.chat_outlined, size: 20),
                     const SizedBox(width: 7),
-                    Text(
-                      widget.history!.title ?? '',
-                      style: GoogleFonts.poppins().copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: '555555'.toColor(),
-                        fontSize: 10,
+                    Container(
+                      width: MediaQuery.of(context).size.width - 147,
+                      child: Text(
+                        widget.history!.title ?? '', overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins().copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: '555555'.toColor(),
+                          fontSize: 10,
+                        ),
                       ),
                     ),
                   ],

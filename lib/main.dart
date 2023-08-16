@@ -6,7 +6,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:supercharged/supercharged.dart';
 import 'cubits/ai_cubit.dart';
 import 'cubits/datauser_cubit.dart';
-import 'cubits/listhistory_cubit.dart';
+import 'cubits/history_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
         color: 'FF6969'.toColor(),
         debugShowCheckedModeBanner: false,
         home: LoginPage(),
-        // home: const HomePage(''),
       ),
     );
   }

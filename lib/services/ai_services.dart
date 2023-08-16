@@ -14,7 +14,7 @@ class AiServices {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${token}'
     });
-    print('hahah' + response.body.toString());
+    // print('hahah' + response.body.toString());
 
     if (response.statusCode != 200) {
       return ApiReturnValue(message: 'Please try Again');

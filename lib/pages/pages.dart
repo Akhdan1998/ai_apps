@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flushbar/flutter_flushbar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart';
 import 'dart:io';
@@ -22,8 +23,8 @@ import '../cubits/ai_cubit.dart';
 import '../cubits/ai_state.dart';
 import '../cubits/datauser_cubit.dart';
 import '../cubits/datauser_state.dart';
-import '../cubits/listHistory_cubit.dart';
-import '../cubits/listHistory_state.dart';
+import '../cubits/history_cubit.dart';
+import '../cubits/history_state.dart';
 import '../models/api_return_foto.dart';
 import '../models/data_user.dart';
 import '../models/edit_profil.dart';
@@ -45,4 +46,5 @@ part 'login_page.dart';
 
 String? selectedRandomId;
 bool showChat = true;
+bool showContoh = false;
 

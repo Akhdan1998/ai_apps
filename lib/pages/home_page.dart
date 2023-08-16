@@ -10,26 +10,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // void logout(String id) async {
-  //   Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/logout');
-  //   var res = await http.post(
-  //     url_,
-  //     headers: {
-  //       "Accept": "application/json",
-  //       "Authorization": 'Bearer ${widget.token}'
-  //     },
-  //   );
-  //   Map<String, dynamic> body = jsonDecode(res.body);
-  //   print("logout " + res.body.toString());
-  //   if (res.statusCode == 200) {
-  //     bool data = body["data"];
-  //     Get.to(
-  //        LoginPage(),
-  //     );
-  //   } else {
-  //     throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
-  //   }
-  // }
+  void logout(String id) async {
+    Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/logout');
+    var res = await http.post(
+      url_,
+      headers: {
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${widget.token}'
+      },
+    );
+    Map<String, dynamic> body = jsonDecode(res.body);
+    print("logouttttt ${res.body}");
+    if (res.statusCode == 200) {
+      bool data = body["data"];
+      print("logout sukses ${res.body}");
+      print("logout token sukses ${widget.token}");
+
+      Get.offAll(
+        LoginPage(),
+      );
+    } else {
+      throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
+    }
+  }
 
   final tanya1 = TextEditingController(text: 'Menangani tantrum pada anak');
   final tanya2 = TextEditingController(text: 'Resep mpasi untuk bayi');
@@ -40,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = false;
   bool showOverlay = false;
   bool show = false;
-  bool showContoh = false;
+  // bool showContoh = false;
 
   String? time;
 
@@ -57,7 +60,7 @@ class _HomePageState extends State<HomePage> {
     time = DateTime.now().millisecondsSinceEpoch.toString();
     context.read<AiCubit>().getAi(widget.token, time!);
     context.read<DataUserCubit>().getData(widget.token);
-    // context.read<HistoryCubit>().getHistory(widget.token);
+    context.read<HistoryCubit>().getHistory(widget.token);
   }
 
   Future<List<Ai>> cari() async {
@@ -170,10 +173,6 @@ class _HomePageState extends State<HomePage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _openEndDrawer() {
-    _scaffoldKey.currentState!.openEndDrawer();
-  }
-
   @override
   Widget build(BuildContext context) {
     return LoaderOverlay(
@@ -189,49 +188,37 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
-          elevation: 1,
-          title: Container(
-            width: MediaQuery.of(context).size.width,
-            // constraints: const BoxConstraints(maxWidth: 800),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'A.I Parentoday',
+          elevation: 5,
+          iconTheme: IconThemeData(color: '737373'.toColor()),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'A.I Parentoday',
+                    style: GoogleFonts.poppins().copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: '5E5E5E'.toColor(),
+                      fontSize: 12,
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 80,
+                    child: Text(
+                      'Menjawab semua masalah parentingmu dengan cepat dan efisien',
+                      maxLines: 2,
                       style: GoogleFonts.poppins().copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: '5E5E5E'.toColor(),
-                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                        color: '959595'.toColor(),
+                        fontSize: 11,
                       ),
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 80,
-                      child: Text(
-                        'Menjawab semua masalah parentingmu dengan cepat dan efisien',
-                        maxLines: 2,
-                        style: GoogleFonts.poppins().copyWith(
-                          fontWeight: FontWeight.w300,
-                          color: '959595'.toColor(),
-                          fontSize: 11,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                // ElevatedButton(
-                //   style: ElevatedButton.styleFrom(
-                //       backgroundColor: Colors.white, elevation: 0),
-                //   onPressed: _openEndDrawer,
-                //   child: Icon(
-                //     Icons.menu,
-                //     color: '737373'.toColor(),
-                //   ),
-                // ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
         body: BlocBuilder<DataUserCubit, DataUserState>(
@@ -256,8 +243,6 @@ class _HomePageState extends State<HomePage> {
                                       scale: 2),
                                   SizedBox(width: 10),
                                   Container(
-                                    // constraints:
-                                    //     const BoxConstraints(maxWidth: 800),
                                     width:
                                         MediaQuery.of(context).size.width - 65,
                                     child: Column(
@@ -465,7 +450,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                        // height: 141,
                         padding: const EdgeInsets.only(
                             top: 11, bottom: 11, right: 16, left: 16),
                         child: Column(
@@ -486,8 +470,6 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                  // constraints:
-                                  //     const BoxConstraints(maxWidth: 800),
                                   height: 35,
                                   width: MediaQuery.of(context).size.width - 78,
                                   child: TextField(
@@ -614,81 +596,155 @@ class _HomePageState extends State<HomePage> {
         ),
         endDrawer: Drawer(
           backgroundColor: Colors.white,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    BlocBuilder<DataUserCubit, DataUserState>(
-                      builder: (context, snapshot) {
-                        if (snapshot is DataUserLoaded) {
-                          if (snapshot.dataUser != null) {
-                            return SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+              Positioned(
+                top: 30,
+                left: 15,
+                right: 15,
+                child: BlocBuilder<DataUserCubit, DataUserState>(
+                  builder: (context, snapshot) {
+                    if (snapshot is DataUserLoaded) {
+                      if (snapshot.dataUser != null) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
+                                  CircleAvatar(
+                                    radius: 18,
+                                    backgroundImage: NetworkImage(
+                                        snapshot.dataUser!.profile_photo_url ??
+                                            ''),
+                                    backgroundColor: Colors.white,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      CircleAvatar(
-                                        radius: 18,
-                                        backgroundImage: NetworkImage(snapshot
-                                                .dataUser!.profile_photo_url ??
-                                            ''),
-                                        backgroundColor: Colors.white,
+                                      Text(
+                                        snapshot.dataUser!.nama ?? '',
+                                        style: GoogleFonts.poppins().copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: '424242'.toColor(),
+                                          fontSize: 11,
+                                        ),
                                       ),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            snapshot.dataUser!.nama ?? '',
-                                            style:
-                                                GoogleFonts.poppins().copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: '424242'.toColor(),
-                                              fontSize: 11,
-                                            ),
-                                          ),
-                                          Text(
-                                            snapshot.dataUser!.email ?? '',
-                                            style:
-                                                GoogleFonts.poppins().copyWith(
-                                              fontWeight: FontWeight.w300,
-                                              color: '555555'.toColor(),
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                        ],
+                                      Text(
+                                        snapshot.dataUser!.email ?? '',
+                                        style: GoogleFonts.poppins().copyWith(
+                                          fontWeight: FontWeight.w300,
+                                          color: '555555'.toColor(),
+                                          fontSize: 10,
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Get.to(
-                                        edit(
-                                          snapshot.dataUser!,
-                                          widget.token,
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      color: Colors.white,
-                                      child: Image.asset(
-                                        'assets/edit.png',
-                                        scale: 2.5,
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(
+                                    edit(
+                                      snapshot.dataUser!,
+                                      widget.token,
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Image.asset(
+                                    'assets/edit.png',
+                                    scale: 2.5,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+              ),
+              Positioned(
+                right: 15,
+                left: 15,
+                top: 75,
+                child: GestureDetector(
+                  onTap: () {
+                    context.read<AiCubit>().getAi(widget.token, '');
+
+                    setState(() {
+                      time = DateTime.now().millisecondsSinceEpoch.toString();
+                      selectedRandomId = null;
+                      showChat = false;
+                      showContoh = false;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 5, top: 5, bottom: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset:
+                              const Offset(0, 0), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Pertanyaan Baru',
+                          style: GoogleFonts.poppins().copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                            color: '6D6D6D'.toColor(),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Icon(Icons.add, color: '616161'.toColor()),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 120,
+                left: 15,
+                right: 15,
+                child: Container(
+                  height: MediaQuery.of(context).size.height - 155,
+                  // height: 200,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: BlocBuilder<HistoryCubit, HistoryState>(
+                      builder: (context, headshot) {
+                        if (headshot is HistoryLoaded) {
+                          if (headshot.history != null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: headshot.history!
+                                  .map((e) => list_history(e, widget.token))
+                                  .toList(),
                             );
                           } else {
                             return const SizedBox();
@@ -698,126 +754,60 @@ class _HomePageState extends State<HomePage> {
                         }
                       },
                     ),
-                    const SizedBox(height: 15),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Column(
+                  children: [
+                    Divider(
+                      thickness: 1.5,
+                      color: 'C3C3C3'.toColor(),
+                      height: 1,
+                    ),
                     GestureDetector(
-                      onTap: () {
-                        context.read<AiCubit>().getAi(widget.token, '');
-
+                      onTap: () async {
                         setState(() {
-                          time =
-                              DateTime.now().millisecondsSinceEpoch.toString();
-                          selectedRandomId = null;
-                          showChat = false;
-                          showContoh = false;
+                          isLoading = true;
                         });
-                        Navigator.of(context).pop();
+                        logout(widget.token);
+                        FirebaseAuth.instance.signOut();
                       },
                       child: Container(
                         padding: const EdgeInsets.only(
-                            left: 10, right: 5, top: 5, bottom: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset: const Offset(
-                                  0, 0), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Pertanyaan Baru',
-                              style: GoogleFonts.poppins().copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                                color: '6D6D6D'.toColor(),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            Icon(Icons.add, color: '616161'.toColor()),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    // BlocBuilder<HistoryCubit, HistoryState>(
-                    //   builder: (context, headshot) {
-                    //     if (headshot is HistoryLoaded) {
-                    //       if (headshot.history != null) {
-                    //         return Column(
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           mainAxisAlignment: MainAxisAlignment.start,
-                    //           children: headshot.history!
-                    //               .map((e) => list_history(e, widget.token))
-                    //               .toList(),
-                    //         );
-                    //       } else {
-                    //         return const SizedBox();
-                    //       }
-                    //     } else {
-                    //       return const SizedBox();
-                    //     }
-                    //   },
-                    // ),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  Divider(
-                    thickness: 1.5,
-                    color: 'C3C3C3'.toColor(),
-                    height: 5,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      // await signOut().then((result) {
-                      //   print(result);
-                      //   logout(widget.token);
-                      // }).catchError((error) {
-                      //   print('SignOut Error: $error');
-                      // });
-                    },
-                    child: Container(
-                      padding:
-                          const EdgeInsets.only(left: 15, top: 10, bottom: 10),
-                      color: Colors.white,
-                      child: (isLoading == true)
-                          ? Center(
-                              child: Container(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: 'FF6969'.toColor(),
-                                ),
-                              ),
-                            )
-                          : Row(
-                              children: [
-                                const Icon(Icons.logout, size: 18),
-                                const SizedBox(width: 10),
-                                Text(
-                                  'Sign Out',
-                                  style: GoogleFonts.poppins().copyWith(
-                                    fontWeight: FontWeight.w300,
-                                    color: '555555'.toColor(),
-                                    fontSize: 12,
+                            left: 15, top: 10, bottom: 10),
+                        color: Colors.white,
+                        child: (isLoading == true)
+                            ? Center(
+                                child: Container(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: 'FF6969'.toColor(),
                                   ),
                                 ),
-                              ],
-                            ),
+                              )
+                            : Row(
+                                children: [
+                                  const Icon(Icons.logout, size: 18),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    'Sign Out',
+                                    style: GoogleFonts.poppins().copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      color: '555555'.toColor(),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
