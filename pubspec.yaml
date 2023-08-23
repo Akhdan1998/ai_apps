@@ -53,7 +53,12 @@ dependencies:
   file_picker: ^4.6.1
   dio: ^4.0.0
   flutter_flushbar: ^0.0.2
-
+  flutter_sound: ^9.2.13
+  permission_handler: ^10.4.3
+  simple_waveform_progressbar: ^0.0.3
+  audio_waveforms: ^1.0.4
+  assets_audio_player: ^3.1.0
+  audioplayers: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +86,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - audios/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
