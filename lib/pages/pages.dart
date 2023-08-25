@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:ai_apps/models/auth.dart';
 import 'package:ai_apps/models/logreg.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_waveform_progressbar/simple_waveform_progressbar.dart';
+// import 'package:simple_waveform_progressbar/simple_waveform_progressbar.dart';
 import 'package:universal_io/io.dart';
 import 'dart:io';
 import 'package:collection/collection.dart';
@@ -40,7 +40,6 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 part 'edit.dart';
 

@@ -106,34 +106,50 @@ class VoiceUserCard extends StatefulWidget {
 
 class _VoiceUserCardState extends State<VoiceUserCard> {
   bool isPlaying = false;
-  late AudioPlayer audioPlayer;
   String audioFilePath = '/data/user/0/com.parentoday.ai_apps/cache/audio';
-  RecorderController controller = RecorderController();
-
-  @override
-  void initState() {
-    super.initState();
-    audioPlayer = AudioPlayer();
-  }
+  PlayerController controllerWave = PlayerController();
 
   @override
   void dispose() {
-    audioPlayer.dispose();
     super.dispose();
+    controllerWave.dispose();
   }
 
   Future playAudio() async {
-    await audioPlayer.play(DeviceFileSource(audioFilePath));
+    await controllerWave.preparePlayer(
+      path: audioFilePath,
+      shouldExtractWaveform: true,
+      noOfSamples: 100,
+      volume: 10,
+    );
+    final waveformData = await controllerWave.extractWaveformData(
+      path: audioFilePath,
+      noOfSamples: 100,
+    );
+    await controllerWave.startPlayer(finishMode: FinishMode.stop);
+    final duration = await controllerWave.getDuration(DurationType.max);
+    controllerWave.onPlayerStateChanged.listen((state) {});
+    controllerWave.onCurrentDurationChanged.listen((duration) {});
+    controllerWave.onCurrentExtractedWaveformData.listen((data) {});
+    controllerWave.onExtractionProgress.listen((progress) {});
+    controllerWave.onCompletion.listen((_) {
+      setState(() {
+        isPlaying = false;
+      });
+    });
+    controllerWave.updateFrequency = UpdateFrequency.low;
   }
 
+
+
   Future pauseAudio() async {
-    await audioPlayer.pause();
+    await controllerWave.stopPlayer();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(15),
       color: Colors.white,
       child: Row(
@@ -157,15 +173,15 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
           SizedBox(
             width: MediaQuery.of(context).size.width - 104,
             height: 25,
-            child: AudioWaveforms(
-              backgroundColor: Colors.white,
-              size: Size(MediaQuery.of(context).size.width, 200.0),
-              recorderController: controller,
-              enableGesture: true,
-              waveStyle: WaveStyle(
-                spacing: 8,
-                backgroundColor: Colors.green,
-                waveColor: 'FF6969'.toColor(),
+            child: AudioFileWaveforms(
+              animationCurve: Curves.easeIn,
+              size: Size(MediaQuery.of(context).size.width, 500.0),
+              playerController: controllerWave,
+              playerWaveStyle: PlayerWaveStyle(
+                fixedWaveColor: '6E757B'.toColor(),
+                liveWaveColor: 'C7C7C9'.toColor(),
+                seekLineColor: 'FF6969'.toColor(),
+                waveCap: StrokeCap.round,
               ),
             ),
           ),
@@ -178,11 +194,7 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
                   pauseAudio();
                 } else {
                   isPlaying = true;
-                  playAudio().then((value) {
-                    setState(() {
-                      isPlaying = false;
-                    });
-                  });
+                  playAudio();
                 }
               });
             },

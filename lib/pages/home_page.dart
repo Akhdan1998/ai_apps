@@ -1,5 +1,14 @@
 part of 'pages.dart';
 
+const colorizeColors = [
+  Colors.pinkAccent,
+  Colors.white,
+  Colors.pinkAccent,
+];
+const colorizeStyle = TextStyle(
+  fontSize: 10,
+);
+
 class HomePage extends StatefulWidget {
   final token;
 
@@ -10,6 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ScrollController? controller;
   RecorderController controllerWave = RecorderController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final tanya1 = TextEditingController(text: 'Menangani tantrum pada anak');
@@ -17,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   final tanya3 = TextEditingController(text: 'Cara mengatasi anak susah makan');
   final pertanyaan = TextEditingController();
   final pertanyaanBaru = TextEditingController();
-  final recorder = FlutterSoundRecorder();
+  late final recorder = FlutterSoundRecorder();
   bool isLoading = false;
   bool showOverlay = false;
   bool show = false;
@@ -25,12 +35,8 @@ class _HomePageState extends State<HomePage> {
   bool voice = false;
   bool play = false;
   bool isRecorderReady = false;
-
   String? time;
-
   FocusNode focusNode = FocusNode();
-
-  ScrollController? controller;
 
   @override
   void initState() {
@@ -197,14 +203,12 @@ class _HomePageState extends State<HomePage> {
 
   Future initRecorder() async {
     final status = await Permission.microphone.request();
-
     if (status != PermissionStatus.granted) {
       throw 'Microphone permissions not granted';
     }
-
     await recorder.openRecorder();
-    isRecorderReady = true;
     recorder.setSubscriptionDuration(const Duration(milliseconds: 500));
+    isRecorderReady = true;
   }
 
   @override
@@ -475,7 +479,7 @@ class _HomePageState extends State<HomePage> {
                         : Container(),
                     //chatPopup
                     (voice != true)
-                    //teks
+                        //teks
                         ? Positioned(
                             top: 0,
                             child: Container(
@@ -514,7 +518,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           )
-                    //voice
+                        //voice
                         : Positioned(
                             top: 0,
                             child: Container(
@@ -527,14 +531,12 @@ class _HomePageState extends State<HomePage> {
                                   builder: (context, snapshot) {
                                     if (snapshot is AiLoaded) {
                                       if (snapshot.ai != null) {
-                                        return Column(
-                                          children: [
-                                            VoiceUserCard(
-                                              state.dataUser!,
-                                              widget.token,
-                                            )
-                                          ]
-                                        );
+                                        return Column(children: [
+                                          VoiceUserCard(
+                                            state.dataUser!,
+                                            widget.token,
+                                          )
+                                        ]);
                                         // return Column(
                                         //   children: snapshot.ai!
                                         //       .mapIndexed(
@@ -561,9 +563,9 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                    //bottomNavigation
+                    //BOTTOM NAVIGATION
                     (voice != true)
-                    //keyboard
+                        //keyboard
                         ? Positioned(
                             bottom: 0,
                             right: 0,
@@ -728,7 +730,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           )
-                    //voice
+                        //voice
                         : Positioned(
                             bottom: 0,
                             right: 0,
@@ -742,12 +744,12 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 1,
-                                    offset: const Offset(0, 0), // changes position of shadow
+                                    offset: const Offset(
+                                        0, 0), // changes position of shadow
                                   ),
                                 ],
                               ),
-                              padding: const EdgeInsets.only(
-                                  top: 11, bottom: 11, right: 16, left: 16),
+                              padding: const EdgeInsets.only(top: 11, bottom: 11, right: 16, left: 16),
                               child: Column(
                                 children: [
                                   (show == true)
@@ -765,38 +767,36 @@ class _HomePageState extends State<HomePage> {
                                   Row(
                                     children: [
                                       Container(
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                78,
-                                        padding: EdgeInsets.all(8),
+                                        width: MediaQuery.of(context).size.width - 78,
+                                        padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           color: 'F2F2F2'.toColor(),
                                           borderRadius:
                                               BorderRadius.circular(6),
                                         ),
                                         child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             StreamBuilder<RecordingDisposition>(
                                                 stream: recorder.onProgress,
                                                 builder: (context, shashoot) {
-                                                  final duration = shashoot
-                                                          .hasData
+                                                 final duration = shashoot.hasData
                                                       ? shashoot.data!.duration
                                                       : Duration.zero;
 
                                                   String twoDigits(int n) => n
-                                                      .toString()
-                                                      .padLeft(2, '0');
-                                                  final twoDigitMinutes =
+                                                      .toString().padLeft(2, '0');
+
+                                                 final twoDigitMinutes =
                                                       twoDigits(duration
                                                           .inMinutes
                                                           .remainder(60));
-                                                  final twoDigitSeconds =
+                                                 final twoDigitSeconds =
                                                       twoDigits(duration
                                                           .inSeconds
                                                           .remainder(60));
                                                   return Text(
-                                                    '$twoDigitMinutes:$twoDigitSeconds',
+                                                    (play == true) ? '${twoDigitMinutes ?? "00"}:${twoDigitSeconds ?? "00"}' : "00:00",
                                                     style: GoogleFonts.poppins()
                                                         .copyWith(
                                                       fontSize: 12,
@@ -804,21 +804,24 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   );
                                                 }),
-                                            const SizedBox(width: 5),
-                                            SizedBox(
-                                              width: MediaQuery.of(context).size.width - 132,
-                                              height: 25,
-                                              child: AudioWaveforms(
-                                                size: Size(MediaQuery.of(context).size.width, 200.0),
-                                                recorderController: controllerWave,
-                                                enableGesture: true,
-                                                waveStyle: WaveStyle(
-                                                  spacing: 8,
-                                                  backgroundColor: Colors.green,
-                                                  waveColor: 'FF6969'.toColor(),
-                                                ),
-                                              ),
-                                            ),
+                                            (play == true)
+                                                ? AnimatedTextKit(
+                                                    isRepeatingAnimation: true,
+                                                    repeatForever: true,
+                                                    animatedTexts: [
+                                                      ColorizeAnimatedText(
+                                                        'Tanyakan dengan suara',
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        textStyle:
+                                                            colorizeStyle,
+                                                        colors: colorizeColors,
+                                                        speed: const Duration(
+                                                            milliseconds: 150),
+                                                      )
+                                                    ],
+                                                  )
+                                                : Container(),
                                           ],
                                         ),
                                       ),
@@ -830,7 +833,9 @@ class _HomePageState extends State<HomePage> {
                                           });
                                           if (recorder.isRecording) {
                                             await stop();
+
                                           } else {
+
                                             await record();
                                           }
                                           setState(() {});
@@ -855,6 +860,30 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                         ),
                                       ),
+                                      // GestureDetector(
+                                      //   onTap: () async {
+                                      //     await stop();
+                                      //
+                                      //     setState(() {
+                                      //       duration = Duration.zero;
+                                      //       twoDigitMinutes = "00";
+                                      //       twoDigitSeconds = "00";
+                                      //     });
+                                      //   },
+                                      //   child: Container(
+                                      //     padding: const EdgeInsets.all(8),
+                                      //     decoration: BoxDecoration(
+                                      //       color: 'FF6969'.toColor(),
+                                      //       borderRadius:
+                                      //       BorderRadius.circular(50),
+                                      //     ),
+                                      //     child: const Icon(
+                                      //       Icons.pause,
+                                      //       color: Colors.white,
+                                      //       size: 20,
+                                      //     ),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                   const SizedBox(height: 5),
