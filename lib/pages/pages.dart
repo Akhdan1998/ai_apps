@@ -29,6 +29,7 @@ import '../cubits/datauser_cubit.dart';
 import '../cubits/datauser_state.dart';
 import '../cubits/history_cubit.dart';
 import '../cubits/history_state.dart';
+import '../models/api_return_audio.dart';
 import '../models/api_return_foto.dart';
 import '../models/data_user.dart';
 import '../models/edit_profil.dart';

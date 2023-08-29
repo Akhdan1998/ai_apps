@@ -95,10 +95,11 @@ class ChatRobotCard extends StatelessWidget {
 //
 
 class VoiceUserCard extends StatefulWidget {
-  late final DataUser userData;
-  late final String token;
+  final Ai aiModel;
+  final DataUser userData;
+  final String token;
 
-  VoiceUserCard(this.userData, this.token);
+  VoiceUserCard(this.aiModel, this.userData, this.token);
 
   @override
   State<VoiceUserCard> createState() => _VoiceUserCardState();
@@ -139,8 +140,6 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
     });
     controllerWave.updateFrequency = UpdateFrequency.low;
   }
-
-
 
   Future pauseAudio() async {
     await controllerWave.stopPlayer();
@@ -198,29 +197,22 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
                 }
               });
             },
-            child: (isPlaying == true)
-                ? Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: 'A5A5A5'.toColor(),
-                    ),
-                    child: const Icon(
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: 'A5A5A5'.toColor(),
+              ),
+              child: (isPlaying == true)
+                  ? const Icon(
                       Icons.pause,
                       color: Colors.white,
-                    ),
-                  )
-                : Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: 'A5A5A5'.toColor(),
-                    ),
-                    child: const Icon(
+                    )
+                  : const Icon(
                       Icons.play_arrow,
                       color: Colors.white,
                     ),
-                  ),
+            ),
           ),
         ],
       ),

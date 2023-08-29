@@ -65,14 +65,13 @@ class _editState extends State<edit> {
 
     var response = await request.send();
 
-    String responseBody1 = await response.stream.bytesToString();
-
-    print('response body $responseBody1');
+    // String responseBody1 = await response.stream.bytesToString();
+    // print('response body $responseBody1');
 
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
       var data = jsonDecode(responseBody);
-      print('response body $responseBody');
+      // print('response body $responseBody');
       String imagePath = data['data'];
       return ApiReturnFoto(value: imagePath, message: '');
     } else {

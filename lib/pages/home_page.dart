@@ -20,14 +20,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ScrollController? controller;
-  RecorderController controllerWave = RecorderController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final FlutterSoundRecorder recorder = FlutterSoundRecorder();
   final tanya1 = TextEditingController(text: 'Menangani tantrum pada anak');
   final tanya2 = TextEditingController(text: 'Resep mpasi untuk bayi');
   final tanya3 = TextEditingController(text: 'Cara mengatasi anak susah makan');
   final pertanyaan = TextEditingController();
   final pertanyaanBaru = TextEditingController();
-  late final recorder = FlutterSoundRecorder();
+  FocusNode focusNode = FocusNode();
   bool isLoading = false;
   bool showOverlay = false;
   bool show = false;
@@ -36,7 +36,8 @@ class _HomePageState extends State<HomePage> {
   bool play = false;
   bool isRecorderReady = false;
   String? time;
-  FocusNode focusNode = FocusNode();
+  String? _urlAudio;
+  File? audioFile;
 
   @override
   void initState() {
@@ -178,7 +179,7 @@ class _HomePageState extends State<HomePage> {
     Map<String, dynamic> body = jsonDecode(res.body);
     if (res.statusCode == 200) {
       List<Ai> value =
-          (body['data'] as Iterable).map((e) => Ai.fromJson(e)).toList();
+      (body['data'] as Iterable).map((e) => Ai.fromJson(e)).toList();
 
       await context.read<AiCubit>().getAi(
           widget.token, (selectedRandomId != null) ? selectedRandomId! : time!);
@@ -186,6 +187,61 @@ class _HomePageState extends State<HomePage> {
       return value;
     } else {
       throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
+    }
+  }
+
+  Future<List<AudioModel>> botAudio() async {
+    Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai/audio');
+    var res = await http.post(
+      url_,
+      body: {
+        'url_audio': _urlAudio,
+        'random_id': (selectedRandomId != null) ? selectedRandomId : time,
+      },
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer ${widget.token}",
+      },
+    );
+    Map<String, dynamic> body = jsonDecode(res.body);
+    print('respose belum berhasil ${res.body}');
+    if (res.statusCode == 200) {
+      List<AudioModel> value = (body['data'] as Iterable).map((e) => AudioModel.fromJson(e)).toList();
+      print('respose audio berhasil ${res.statusCode}');
+
+      await context.read<AiCubit>().getAi(
+          widget.token, (selectedRandomId != null) ? selectedRandomId! : time!);
+
+      return value;
+    } else {
+      throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
+    }
+  }
+
+  Future<ApiReturnAudio<String>> uploadAudio(File audioFile,
+      {String? token, http.MultipartRequest? request}) async {
+    String url = 'https://dashboard.parentoday.com/api/chat/ai/audio/upload';
+    var uri = Uri.parse(url);
+    request = http.MultipartRequest('POST', uri)
+      ..headers["Content-Type"] = "application/json"
+      ..headers["Authorization"] = "Bearer ${widget.token}";
+
+    var multiPartFile =
+        await http.MultipartFile.fromPath('file', audioFile.path);
+    request.files.add(multiPartFile);
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      String responseBody = await response.stream.bytesToString();
+      print('response body sukses $responseBody');
+
+      var data = jsonDecode(responseBody);
+      _urlAudio = data['data'];
+
+      return ApiReturnAudio(value: _urlAudio, message: '');
+    } else {
+      return ApiReturnAudio(message: 'Upload Audio Gagal ', value: '');
     }
   }
 
@@ -197,7 +253,7 @@ class _HomePageState extends State<HomePage> {
   Future stop() async {
     if (!isRecorderReady) return;
     final path = await recorder.stopRecorder();
-    final audioFile = File(path!);
+    audioFile = File(path!);
     print('Recorded audio: $audioFile');
   }
 
@@ -531,27 +587,28 @@ class _HomePageState extends State<HomePage> {
                                   builder: (context, snapshot) {
                                     if (snapshot is AiLoaded) {
                                       if (snapshot.ai != null) {
-                                        return Column(children: [
-                                          VoiceUserCard(
-                                            state.dataUser!,
-                                            widget.token,
-                                          )
-                                        ]);
-                                        // return Column(
-                                        //   children: snapshot.ai!
-                                        //       .mapIndexed(
-                                        //         (int index, e) =>
-                                        //             (e.role == "user")
-                                        //                 ? VoiceUserCard(
-                                        //                     e,
-                                        //                     state.dataUser!,
-                                        //                     widget.token,
-                                        //                   )
-                                        //                 : ChatRobotCard(
-                                        //                     e, widget.token),
-                                        //       )
-                                        //       .toList(),
-                                        // );
+                                        // return Column(children: [
+                                        //   VoiceUserCard(
+                                        //     state.dataUser!,
+                                        //     widget.token,
+                                        //   )
+                                        // ]);
+                                        return Column(
+                                          children: snapshot.ai!
+                                              .mapIndexed(
+                                                (int index, e) =>
+                                                    (e.role == "user")
+                                                        ? VoiceUserCard(
+                                                            e,
+                                                            state.dataUser!,
+                                                            widget.token,
+                                                          )
+                                                        : ChatRobotCard(
+                                                            e, widget.token,
+                                                          ),
+                                              )
+                                              .toList(),
+                                        );
                                       } else {
                                         return const SizedBox();
                                       }
@@ -584,8 +641,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                              padding: const EdgeInsets.only(
-                                  top: 11, bottom: 11, right: 16, left: 16),
+                              padding: const EdgeInsets.only(top: 11, bottom: 11, right: 16, left: 16),
                               child: Column(
                                 children: [
                                   (show == true)
@@ -749,7 +805,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                              padding: const EdgeInsets.only(top: 11, bottom: 11, right: 16, left: 16),
+                              padding: const EdgeInsets.only(
+                                  top: 11, bottom: 11, right: 16, left: 16),
                               child: Column(
                                 children: [
                                   (show == true)
@@ -767,7 +824,9 @@ class _HomePageState extends State<HomePage> {
                                   Row(
                                     children: [
                                       Container(
-                                        width: MediaQuery.of(context).size.width - 78,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                78,
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           color: 'F2F2F2'.toColor(),
@@ -775,28 +834,33 @@ class _HomePageState extends State<HomePage> {
                                               BorderRadius.circular(6),
                                         ),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             StreamBuilder<RecordingDisposition>(
                                                 stream: recorder.onProgress,
                                                 builder: (context, shashoot) {
-                                                 final duration = shashoot.hasData
+                                                  final duration = shashoot
+                                                          .hasData
                                                       ? shashoot.data!.duration
                                                       : Duration.zero;
 
                                                   String twoDigits(int n) => n
-                                                      .toString().padLeft(2, '0');
+                                                      .toString()
+                                                      .padLeft(2, '0');
 
-                                                 final twoDigitMinutes =
+                                                  final twoDigitMinutes =
                                                       twoDigits(duration
                                                           .inMinutes
                                                           .remainder(60));
-                                                 final twoDigitSeconds =
+                                                  final twoDigitSeconds =
                                                       twoDigits(duration
                                                           .inSeconds
                                                           .remainder(60));
                                                   return Text(
-                                                    (play == true) ? '${twoDigitMinutes ?? "00"}:${twoDigitSeconds ?? "00"}' : "00:00",
+                                                    (play == true)
+                                                        ? '$twoDigitMinutes:$twoDigitSeconds'
+                                                        : "00:00",
                                                     style: GoogleFonts.poppins()
                                                         .copyWith(
                                                       fontSize: 12,
@@ -833,12 +897,12 @@ class _HomePageState extends State<HomePage> {
                                           });
                                           if (recorder.isRecording) {
                                             await stop();
-
+                                            await uploadAudio(audioFile!);
                                           } else {
-
                                             await record();
                                           }
                                           setState(() {});
+                                          // context.read<HistoryCubit>().getHistory(widget.token);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(8),
@@ -860,30 +924,6 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                         ),
                                       ),
-                                      // GestureDetector(
-                                      //   onTap: () async {
-                                      //     await stop();
-                                      //
-                                      //     setState(() {
-                                      //       duration = Duration.zero;
-                                      //       twoDigitMinutes = "00";
-                                      //       twoDigitSeconds = "00";
-                                      //     });
-                                      //   },
-                                      //   child: Container(
-                                      //     padding: const EdgeInsets.all(8),
-                                      //     decoration: BoxDecoration(
-                                      //       color: 'FF6969'.toColor(),
-                                      //       borderRadius:
-                                      //       BorderRadius.circular(50),
-                                      //     ),
-                                      //     child: const Icon(
-                                      //       Icons.pause,
-                                      //       color: Colors.white,
-                                      //       size: 20,
-                                      //     ),
-                                      //   ),
-                                      // ),
                                     ],
                                   ),
                                   const SizedBox(height: 5),
