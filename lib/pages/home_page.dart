@@ -21,13 +21,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ScrollController? controller;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final FlutterSoundRecorder recorder = FlutterSoundRecorder();
+  late FlutterSoundRecorder recorder = FlutterSoundRecorder();
+  // late String recordFilePath;
   final tanya1 = TextEditingController(text: 'Menangani tantrum pada anak');
   final tanya2 = TextEditingController(text: 'Resep mpasi untuk bayi');
   final tanya3 = TextEditingController(text: 'Cara mengatasi anak susah makan');
   final pertanyaan = TextEditingController();
   final pertanyaanBaru = TextEditingController();
   FocusNode focusNode = FocusNode();
+  File? audioFile;
   bool isLoading = false;
   bool showOverlay = false;
   bool show = false;
@@ -35,9 +37,9 @@ class _HomePageState extends State<HomePage> {
   bool voice = false;
   bool play = false;
   bool isRecorderReady = false;
+  int i = 0;
   String? time;
   String? _urlAudio;
-  File? audioFile;
 
   @override
   void initState() {
@@ -179,7 +181,7 @@ class _HomePageState extends State<HomePage> {
     Map<String, dynamic> body = jsonDecode(res.body);
     if (res.statusCode == 200) {
       List<Ai> value =
-      (body['data'] as Iterable).map((e) => Ai.fromJson(e)).toList();
+          (body['data'] as Iterable).map((e) => Ai.fromJson(e)).toList();
 
       await context.read<AiCubit>().getAi(
           widget.token, (selectedRandomId != null) ? selectedRandomId! : time!);
@@ -206,7 +208,9 @@ class _HomePageState extends State<HomePage> {
     Map<String, dynamic> body = jsonDecode(res.body);
     print('respose belum berhasil ${res.body}');
     if (res.statusCode == 200) {
-      List<AudioModel> value = (body['data'] as Iterable).map((e) => AudioModel.fromJson(e)).toList();
+      List<AudioModel> value = (body['data'] as Iterable)
+          .map((e) => AudioModel.fromJson(e))
+          .toList();
       print('respose audio berhasil ${res.statusCode}');
 
       await context.read<AiCubit>().getAi(
@@ -245,16 +249,59 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future record() async {
-    if (!isRecorderReady) return;
-    await recorder.startRecorder(toFile: 'audio');
+  Future<bool> checkPermission() async {
+    if (!await Permission.microphone.isGranted) {
+      final PermissionStatus status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        return false;
+      }
+    }
+    return true;
   }
 
-  Future stop() async {
-    if (!isRecorderReady) return;
-    final path = await recorder.stopRecorder();
-    audioFile = File(path!);
-    print('Recorded audio: $audioFile');
+  Future<void> recordMp3() async {
+    bool hasPermission = await checkPermission();
+    if (hasPermission) {
+      String recordFilePath = await getFilePath();
+      RecordMp3.instance.start(recordFilePath, (type) {
+        setState(() {});
+      });
+    }
+    setState(() {});
+  }
+
+  Future<void> stopMp3() async {
+    final recordingStopped = RecordMp3.instance.stop();
+    print('Recording stopped: $recordingStopped');
+  }
+
+  Future<String> getFilePath() async {
+    Directory storageDirectory = await getApplicationDocumentsDirectory();
+    String sdPath = "${storageDirectory.path}/record";
+    var directory = Directory(sdPath);
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+    }
+    return "$sdPath/test_${i++}.mp3";
+  }
+
+  final String _fileName = 'myAudio.aac';
+
+  Future soundRecord() async {
+    await recorder.startRecorder(
+      toFile: 'audio',
+      // codec : Codec.mp3,
+    );
+  }
+
+  Future soundStop() async {
+    final isPath = await recorder.stopRecorder();
+    audioFile = File(isPath!);
+    print('Recorded audio: $isPath');
+    uploadAudio(audioFile!);
+    // botAudio();
+    // convertToMp3();
+    print('stopped....');
   }
 
   Future initRecorder() async {
@@ -264,8 +311,71 @@ class _HomePageState extends State<HomePage> {
     }
     await recorder.openRecorder();
     recorder.setSubscriptionDuration(const Duration(milliseconds: 500));
-    isRecorderReady = true;
   }
+
+  // final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+  // String storage = '/data/user/0/com.parentoday.ai_apps/cache';
+
+  // Future<void> convertToMp3() async {
+  //   final String inputPath = audioFile!.path;
+  //   final String outputPath = storage;
+  //
+  //   final int rc = await _flutterFFmpeg.execute(
+  //     '-i $inputPath $outputPath', // Specify the codec for MP3 conversion.
+  //   );
+  //
+  //   if (rc == 0) {
+  //     print('Konversi selesai. File MP3 tersimpan di $outputPath');
+  //   } else {
+  //     print('Konversi gagal');
+  //   }
+  // }
+
+  // Future<void> convertToMp3() async {
+  //   FFmpegKit.execute('-i $_urlAudio -c:v $storage/mp3').then((session) async {
+  //
+  //     final returnCode = await session.getReturnCode();
+  //     print('ReturnCodeeeeeee $returnCode');
+  //
+  //     if (ReturnCode.isSuccess(returnCode)) {
+  //       Fluttertoast.showToast(
+  //           msg: "SUCCESS",
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.CENTER,
+  //           timeInSecForIosWeb: 10,
+  //           backgroundColor: Colors.black,
+  //           textColor: Colors.white,
+  //           fontSize: 16.0
+  //       );
+  //       // SUCCESS
+  //       print('Conversion successful $returnCode');
+  //     } else if (ReturnCode.isCancel(returnCode)) {
+  //       Fluttertoast.showToast(
+  //           msg: "CANCEL",
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.CENTER,
+  //           timeInSecForIosWeb: 10,
+  //           backgroundColor: Colors.red,
+  //           textColor: Colors.white,
+  //           fontSize: 16.0
+  //       );
+  //       // CANCEL
+  //       print('Conversion failed with return code $returnCode');
+  //     } else {
+  //       Fluttertoast.showToast(
+  //           msg: "ERROR",
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.CENTER,
+  //           timeInSecForIosWeb: 10,
+  //           backgroundColor: Colors.blue,
+  //           textColor: Colors.white,
+  //           fontSize: 16.0
+  //       );
+  //       // ERROR
+  //       print('error');
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -587,28 +697,29 @@ class _HomePageState extends State<HomePage> {
                                   builder: (context, snapshot) {
                                     if (snapshot is AiLoaded) {
                                       if (snapshot.ai != null) {
-                                        // return Column(children: [
-                                        //   VoiceUserCard(
-                                        //     state.dataUser!,
-                                        //     widget.token,
-                                        //   )
-                                        // ]);
-                                        return Column(
-                                          children: snapshot.ai!
-                                              .mapIndexed(
-                                                (int index, e) =>
-                                                    (e.role == "user")
-                                                        ? VoiceUserCard(
-                                                            e,
-                                                            state.dataUser!,
-                                                            widget.token,
-                                                          )
-                                                        : ChatRobotCard(
-                                                            e, widget.token,
-                                                          ),
-                                              )
-                                              .toList(),
-                                        );
+                                        return Column(children: [
+                                          VoiceUserCard(
+                                            state.dataUser!,
+                                            widget.token,
+                                          )
+                                        ]);
+                                        // return Column(
+                                        //   children: snapshot.ai!
+                                        //       .mapIndexed(
+                                        //         (int index, e) =>
+                                        //             (e.role == "user")
+                                        //                 ? VoiceUserCard(
+                                        //                     e,
+                                        //                     state.dataUser!,
+                                        //                     widget.token,
+                                        //                   )
+                                        //                 : ChatRobotCard(
+                                        //                     e,
+                                        //                     widget.token,
+                                        //                   ),
+                                        //       )
+                                        //       .toList(),
+                                        // );
                                       } else {
                                         return const SizedBox();
                                       }
@@ -641,7 +752,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                              padding: const EdgeInsets.only(top: 11, bottom: 11, right: 16, left: 16),
+                              padding: const EdgeInsets.only(
+                                  top: 11, bottom: 11, right: 16, left: 16),
                               child: Column(
                                 children: [
                                   (show == true)
@@ -895,13 +1007,17 @@ class _HomePageState extends State<HomePage> {
                                           setState(() {
                                             play = !play;
                                           });
+
                                           if (recorder.isRecording) {
-                                            await stop();
-                                            await uploadAudio(audioFile!);
+                                            await soundStop();
+                                            setState(() {});
+                                            await stopMp3();
+                                            // await uploadAudio(audioFile!);
                                           } else {
-                                            await record();
+                                            await soundRecord();
+                                            setState(() {});
+                                            await recordMp3();
                                           }
-                                          setState(() {});
                                           // context.read<HistoryCubit>().getHistory(widget.token);
                                         },
                                         child: Container(

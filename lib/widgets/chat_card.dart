@@ -95,11 +95,11 @@ class ChatRobotCard extends StatelessWidget {
 //
 
 class VoiceUserCard extends StatefulWidget {
-  final Ai aiModel;
+  // final Ai aiModel;
   final DataUser userData;
   final String token;
 
-  VoiceUserCard(this.aiModel, this.userData, this.token);
+  VoiceUserCard(this.userData, this.token); // VoiceUserCard(this.aiModel, this.userData, this.token);
 
   @override
   State<VoiceUserCard> createState() => _VoiceUserCardState();
