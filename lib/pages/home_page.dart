@@ -1,9 +1,9 @@
 part of 'pages.dart';
 
 const colorizeColors = [
-  Colors.pinkAccent,
+  Colors.grey,
   Colors.white,
-  Colors.pinkAccent,
+  Colors.grey,
 ];
 const colorizeStyle = TextStyle(
   fontSize: 10,
@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   ScrollController? controller;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late FlutterSoundRecorder recorder = FlutterSoundRecorder();
-  // late String recordFilePath;
   final tanya1 = TextEditingController(text: 'Menangani tantrum pada anak');
   final tanya2 = TextEditingController(text: 'Resep mpasi untuk bayi');
   final tanya3 = TextEditingController(text: 'Cara mengatasi anak susah makan');
@@ -225,6 +224,7 @@ class _HomePageState extends State<HomePage> {
   Future<ApiReturnAudio<String>> uploadAudio(File audioFile,
       {String? token, http.MultipartRequest? request}) async {
     String url = 'https://dashboard.parentoday.com/api/chat/ai/audio/upload';
+
     var uri = Uri.parse(url);
     request = http.MultipartRequest('POST', uri)
       ..headers["Content-Type"] = "application/json"
@@ -235,7 +235,8 @@ class _HomePageState extends State<HomePage> {
     request.files.add(multiPartFile);
 
     var response = await request.send();
-
+    String responseBody1 = await response.stream.bytesToString();
+    print('response body gagal $responseBody1');
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
       print('response body sukses $responseBody');
@@ -249,43 +250,56 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<bool> checkPermission() async {
-    if (!await Permission.microphone.isGranted) {
-      final PermissionStatus status = await Permission.microphone.request();
-      if (status != PermissionStatus.granted) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  Future<void> recordMp3() async {
-    bool hasPermission = await checkPermission();
-    if (hasPermission) {
-      String recordFilePath = await getFilePath();
-      RecordMp3.instance.start(recordFilePath, (type) {
-        setState(() {});
-      });
-    }
-    setState(() {});
-  }
-
-  Future<void> stopMp3() async {
-    final recordingStopped = RecordMp3.instance.stop();
-    print('Recording stopped: $recordingStopped');
-  }
-
-  Future<String> getFilePath() async {
-    Directory storageDirectory = await getApplicationDocumentsDirectory();
-    String sdPath = "${storageDirectory.path}/record";
-    var directory = Directory(sdPath);
-    if (!directory.existsSync()) {
-      directory.createSync(recursive: true);
-    }
-    return "$sdPath/test_${i++}.mp3";
-  }
-
-  final String _fileName = 'myAudio.aac';
+  // String statusText = "";
+  // bool isComplete = false;
+  // late String recordFilePath;
+  //
+  // Future<bool> checkPermission() async {
+  //   Map<Permission, PermissionStatus> status = await [
+  //     Permission.storage,
+  //     Permission.microphone,
+  //   ].request();
+  //
+  //   print(status[Permission.microphone]);
+  //
+  //   return status[Permission.microphone]!.isGranted;
+  // }
+  //
+  // void recordMp3() async {
+  //   bool hasPermission = await checkPermission();
+  //   if (hasPermission) {
+  //     statusText = "正在录音中...";
+  //     recordFilePath = await getFilePath();
+  //     isComplete = false;
+  //     RecordMp3.instance.start(recordFilePath, (type) {
+  //       statusText = "录音失败--->$type";
+  //       setState(() {});
+  //     });
+  //   } else {
+  //     statusText = "没有录音权限";
+  //   }
+  //   setState(() {});
+  // }
+  //
+  // void stopMp3() {
+  //   bool s = RecordMp3.instance.stop();
+  //   if (s) {
+  //     statusText = "录音已完成";
+  //     isComplete = true;
+  //     setState(() {});
+  //   }
+  //   print('recorded stoped $s');
+  // }
+  //
+  // Future<String> getFilePath() async {
+  //   Directory storageDirectory = await getApplicationDocumentsDirectory();
+  //   String sdPath = "${storageDirectory.path}/record";
+  //   var directory = Directory(sdPath);
+  //   if (!directory.existsSync()) {
+  //     directory.createSync(recursive: true);
+  //   }
+  //   return "$sdPath/test_${i++}.mp3";
+  // }
 
   Future soundRecord() async {
     await recorder.startRecorder(
@@ -297,11 +311,9 @@ class _HomePageState extends State<HomePage> {
   Future soundStop() async {
     final isPath = await recorder.stopRecorder();
     audioFile = File(isPath!);
-    print('Recorded audio: $isPath');
+    print('Recorded audio Flutter Sound: $isPath');
     uploadAudio(audioFile!);
     // botAudio();
-    // convertToMp3();
-    print('stopped....');
   }
 
   Future initRecorder() async {
@@ -313,64 +325,42 @@ class _HomePageState extends State<HomePage> {
     recorder.setSubscriptionDuration(const Duration(milliseconds: 500));
   }
 
-  // final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
   // String storage = '/data/user/0/com.parentoday.ai_apps/cache';
+  // String namaAudio = '/data/user/0/com.parentoday.ai_apps/cache/';
 
-  // Future<void> convertToMp3() async {
+  // Future<String> convertToMp3() async {
   //   final String inputPath = audioFile!.path;
-  //   final String outputPath = storage;
-  //
-  //   final int rc = await _flutterFFmpeg.execute(
-  //     '-i $inputPath $outputPath', // Specify the codec for MP3 conversion.
+  //   final String outputPath = "${storage}/output_shit.mp3";
+
+  //   final rc = await FFmpegKit.execute(
+  //     '-i $inputPath -c:v mp3 $outputPath', // Specify the codec for MP3 conversion.
   //   );
-  //
-  //   if (rc == 0) {
+
+  //   final returnCode = await rc.getReturnCode();
+
+  //   if (returnCode!.isValueSuccess()) {
   //     print('Konversi selesai. File MP3 tersimpan di $outputPath');
   //   } else {
   //     print('Konversi gagal');
   //   }
+
+  //   return outputPath;
   // }
 
   // Future<void> convertToMp3() async {
-  //   FFmpegKit.execute('-i $_urlAudio -c:v $storage/mp3').then((session) async {
-  //
+  //   FFmpegKit.executeAsync('-i $storage -c:v mp3 $namaAudio', (session) async {
   //     final returnCode = await session.getReturnCode();
-  //     print('ReturnCodeeeeeee $returnCode');
   //
   //     if (ReturnCode.isSuccess(returnCode)) {
-  //       Fluttertoast.showToast(
-  //           msg: "SUCCESS",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.CENTER,
-  //           timeInSecForIosWeb: 10,
-  //           backgroundColor: Colors.black,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0
-  //       );
+  //
   //       // SUCCESS
-  //       print('Conversion successful $returnCode');
+  //       print('sukses $returnCode');
   //     } else if (ReturnCode.isCancel(returnCode)) {
-  //       Fluttertoast.showToast(
-  //           msg: "CANCEL",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.CENTER,
-  //           timeInSecForIosWeb: 10,
-  //           backgroundColor: Colors.red,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0
-  //       );
+  //
   //       // CANCEL
-  //       print('Conversion failed with return code $returnCode');
+  //       print('cancel $returnCode');
   //     } else {
-  //       Fluttertoast.showToast(
-  //           msg: "ERROR",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.CENTER,
-  //           timeInSecForIosWeb: 10,
-  //           backgroundColor: Colors.blue,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0
-  //       );
+  //
   //       // ERROR
   //       print('error');
   //     }
@@ -383,17 +373,18 @@ class _HomePageState extends State<HomePage> {
       useDefaultLoading: false,
       overlayWidget: Center(
         child: CircularProgressIndicator(
-          color: 'FF6969'.toColor(),
+          color: textDark,
         ),
       ),
       child: Scaffold(
+        backgroundColor: dasarDark,
         key: _scaffoldKey,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: navigasiDark,
           automaticallyImplyLeading: false,
           elevation: 1.5,
-          iconTheme: IconThemeData(color: '737373'.toColor()),
+          iconTheme: IconThemeData(color: textDark),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -404,7 +395,7 @@ class _HomePageState extends State<HomePage> {
                     'A.I Parentoday',
                     style: GoogleFonts.poppins().copyWith(
                       fontWeight: FontWeight.bold,
-                      color: '5E5E5E'.toColor(),
+                      color: textDark,
                       fontSize: 12,
                     ),
                   ),
@@ -415,7 +406,7 @@ class _HomePageState extends State<HomePage> {
                       maxLines: 2,
                       style: GoogleFonts.poppins().copyWith(
                         fontWeight: FontWeight.w300,
-                        color: '959595'.toColor(),
+                        color: textDark,
                         fontSize: 11,
                       ),
                     ),
@@ -430,18 +421,18 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: (voice != true)
                     ? Container(
-                        color: Colors.white,
+                        color: navigasiDark,
                         child: Icon(
                           Icons.keyboard_voice,
-                          color: '737373'.toColor(),
+                          color: textDark,
                           size: 20,
                         ),
                       )
                     : Container(
-                        color: Colors.white,
+                        color: navigasiDark,
                         child: Icon(
                           Icons.mic_off,
-                          color: '737373'.toColor(),
+                          color: textDark,
                           size: 20,
                         ),
                       ),
@@ -464,7 +455,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
                                   padding: const EdgeInsets.all(15),
-                                  color: 'FFF4F4'.toColor(),
+                                  color: dasarDark,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -486,7 +477,7 @@ class _HomePageState extends State<HomePage> {
                                               style: GoogleFonts.poppins()
                                                   .copyWith(
                                                 fontSize: 12,
-                                                color: '484848'.toColor(),
+                                                color: textDark,
                                               ),
                                             ),
                                             SizedBox(height: 5),
@@ -496,7 +487,7 @@ class _HomePageState extends State<HomePage> {
                                                   .copyWith(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.bold,
-                                                color: '484848'.toColor(),
+                                                color: textDark,
                                               ),
                                             ),
                                             SizedBox(height: 5),
@@ -534,15 +525,14 @@ class _HomePageState extends State<HomePage> {
                                                   },
                                                   child: Chip(
                                                     backgroundColor:
-                                                        'FFE0E0'.toColor(),
+                                                        navigasiDark,
                                                     label: Text(
                                                       'Menangani tantrum pada anak',
                                                       style:
                                                           GoogleFonts.poppins()
                                                               .copyWith(
                                                         fontSize: 11,
-                                                        color:
-                                                            '484848'.toColor(),
+                                                        color: textDark,
                                                       ),
                                                     ),
                                                   ),
@@ -576,15 +566,14 @@ class _HomePageState extends State<HomePage> {
                                                   },
                                                   child: Chip(
                                                     backgroundColor:
-                                                        'FFE0E0'.toColor(),
+                                                        navigasiDark,
                                                     label: Text(
                                                       'Resep mpasi untuk bayi',
                                                       style:
                                                           GoogleFonts.poppins()
                                                               .copyWith(
                                                         fontSize: 11,
-                                                        color:
-                                                            '484848'.toColor(),
+                                                        color: textDark,
                                                       ),
                                                     ),
                                                   ),
@@ -619,15 +608,14 @@ class _HomePageState extends State<HomePage> {
                                                   },
                                                   child: Chip(
                                                     backgroundColor:
-                                                        'FFE0E0'.toColor(),
+                                                        navigasiDark,
                                                     label: Text(
                                                       'Cara mengatasi anak susah makan',
                                                       style:
                                                           GoogleFonts.poppins()
                                                               .copyWith(
                                                         fontSize: 11,
-                                                        color:
-                                                            '484848'.toColor(),
+                                                        color: textDark,
                                                       ),
                                                     ),
                                                   ),
@@ -741,14 +729,13 @@ class _HomePageState extends State<HomePage> {
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: navigasiDark,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 1,
-                                    offset: const Offset(
-                                        0, 0), // changes position of shadow
+                                    offset: const Offset(0, 0),
                                   ),
                                 ],
                               ),
@@ -762,7 +749,7 @@ class _HomePageState extends State<HomePage> {
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.poppins().copyWith(
                                             fontWeight: FontWeight.w300,
-                                            color: '959595'.toColor(),
+                                            color: textDark,
                                             fontSize: 11,
                                           ),
                                         )
@@ -776,6 +763,10 @@ class _HomePageState extends State<HomePage> {
                                         width:
                                             MediaQuery.of(context).size.width -
                                                 78,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: textFieldDark,
+                                        ),
                                         child: TextField(
                                           onSubmitted: (value) async {
                                             focusNode.unfocus();
@@ -800,10 +791,11 @@ class _HomePageState extends State<HomePage> {
                                                 .read<HistoryCubit>()
                                                 .getHistory(widget.token);
                                           },
+                                          style: TextStyle(color: textDark),
                                           focusNode: focusNode,
                                           textCapitalization:
                                               TextCapitalization.sentences,
-                                          cursorColor: 'FF6969'.toColor(),
+                                          cursorColor: textDark,
                                           controller: pertanyaan,
                                           decoration: InputDecoration(
                                             focusedBorder: OutlineInputBorder(
@@ -812,7 +804,7 @@ class _HomePageState extends State<HomePage> {
                                                       Radius.circular(5)),
                                               borderSide: BorderSide(
                                                   width: 1,
-                                                  color: 'FF6969'.toColor()),
+                                                  color: dasarDark),
                                             ),
                                             contentPadding:
                                                 const EdgeInsets.only(
@@ -823,7 +815,7 @@ class _HomePageState extends State<HomePage> {
                                                 GoogleFonts.poppins().copyWith(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w300,
-                                              color: '989797'.toColor(),
+                                              color: textDark,
                                             ),
                                             hintText:
                                                 'Tanya seputar parenting...',
@@ -862,23 +854,23 @@ class _HomePageState extends State<HomePage> {
                                         child: Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: 'FF6969'.toColor(),
+                                            color: dasarDark,
                                             borderRadius:
                                                 BorderRadius.circular(50),
                                           ),
                                           child: isLoading
-                                              ? const SizedBox(
+                                              ? SizedBox(
                                                   width: 20,
                                                   height: 20,
                                                   child: Center(
                                                     child:
                                                         CircularProgressIndicator(
-                                                            color: Colors.white,
+                                                            color: textDark,
                                                             strokeWidth: 2),
                                                   ),
                                                 )
-                                              : const Icon(Icons.send,
-                                                  color: Colors.white,
+                                              : Icon(Icons.send,
+                                                  color: textDark,
                                                   size: 20),
                                         ),
                                       ),
@@ -890,7 +882,7 @@ class _HomePageState extends State<HomePage> {
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poppins().copyWith(
                                       fontWeight: FontWeight.w300,
-                                      color: '959595'.toColor(),
+                                      color: textDark,
                                       fontSize: 11,
                                     ),
                                   ),
@@ -906,14 +898,13 @@ class _HomePageState extends State<HomePage> {
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: navigasiDark,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 1,
-                                    offset: const Offset(
-                                        0, 0), // changes position of shadow
+                                    offset: const Offset(0, 0),
                                   ),
                                 ],
                               ),
@@ -927,7 +918,7 @@ class _HomePageState extends State<HomePage> {
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.poppins().copyWith(
                                             fontWeight: FontWeight.w300,
-                                            color: '959595'.toColor(),
+                                            color: textDark,
                                             fontSize: 11,
                                           ),
                                         )
@@ -941,7 +932,7 @@ class _HomePageState extends State<HomePage> {
                                                 78,
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: 'F2F2F2'.toColor(),
+                                          color: textFieldDark,
                                           borderRadius:
                                               BorderRadius.circular(6),
                                         ),
@@ -976,7 +967,7 @@ class _HomePageState extends State<HomePage> {
                                                     style: GoogleFonts.poppins()
                                                         .copyWith(
                                                       fontSize: 12,
-                                                      color: '4B4B4B'.toColor(),
+                                                      color: textDark,
                                                     ),
                                                   );
                                                 }),
@@ -1007,35 +998,34 @@ class _HomePageState extends State<HomePage> {
                                           setState(() {
                                             play = !play;
                                           });
-
                                           if (recorder.isRecording) {
                                             await soundStop();
                                             setState(() {});
-                                            await stopMp3();
+                                            // stopMp3();
                                             // await uploadAudio(audioFile!);
                                           } else {
                                             await soundRecord();
                                             setState(() {});
-                                            await recordMp3();
+                                            // recordMp3();
                                           }
                                           // context.read<HistoryCubit>().getHistory(widget.token);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: 'FF6969'.toColor(),
+                                            color: textFieldDark,
                                             borderRadius:
                                                 BorderRadius.circular(50),
                                           ),
                                           child: (play != true)
-                                              ? const Icon(
+                                              ? Icon(
                                                   Icons.keyboard_voice,
-                                                  color: Colors.white,
+                                                  color: textDark,
                                                   size: 20,
                                                 )
-                                              : const Icon(
+                                              : Icon(
                                                   Icons.pause,
-                                                  color: Colors.white,
+                                                  color: textDark,
                                                   size: 20,
                                                 ),
                                         ),
@@ -1048,7 +1038,7 @@ class _HomePageState extends State<HomePage> {
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poppins().copyWith(
                                       fontWeight: FontWeight.w300,
-                                      color: '959595'.toColor(),
+                                      color: textDark,
                                       fontSize: 11,
                                     ),
                                   ),
@@ -1067,7 +1057,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         endDrawer: Drawer(
-          backgroundColor: Colors.white,
+          backgroundColor: navigasiDark,
           child: Stack(
             children: [
               Positioned(
@@ -1102,7 +1092,7 @@ class _HomePageState extends State<HomePage> {
                                         snapshot.dataUser!.nama ?? '',
                                         style: GoogleFonts.poppins().copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: '424242'.toColor(),
+                                          color: textDark,
                                           fontSize: 11,
                                         ),
                                       ),
@@ -1110,7 +1100,7 @@ class _HomePageState extends State<HomePage> {
                                         snapshot.dataUser!.email ?? '',
                                         style: GoogleFonts.poppins().copyWith(
                                           fontWeight: FontWeight.w300,
-                                          color: '555555'.toColor(),
+                                          color: textDark,
                                           fontSize: 10,
                                         ),
                                       ),
@@ -1128,10 +1118,10 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 },
                                 child: Container(
-                                  color: Colors.white,
+                                  color: navigasiDark,
                                   child: Image.asset(
                                     'assets/edit.png',
-                                    scale: 2.5,
+                                    scale: 2.5, color: textDark,
                                   ),
                                 ),
                               ),
@@ -1168,11 +1158,11 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.only(
                         left: 10, right: 5, top: 5, bottom: 5),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: navigasiDark,
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
+                          color: textDark,
                           spreadRadius: 1,
                           blurRadius: 1,
                           offset:
@@ -1188,11 +1178,11 @@ class _HomePageState extends State<HomePage> {
                           style: GoogleFonts.poppins().copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 10,
-                            color: '6D6D6D'.toColor(),
+                            color: textDark,
                           ),
                         ),
                         const SizedBox(width: 5),
-                        Icon(Icons.add, color: '616161'.toColor()),
+                        Icon(Icons.add, color: textDark,),
                       ],
                     ),
                   ),
@@ -1202,7 +1192,7 @@ class _HomePageState extends State<HomePage> {
                 top: 120,
                 left: 15,
                 right: 15,
-                child: Container(
+                child: SizedBox(
                   height: MediaQuery.of(context).size.height - 155,
                   // height: 200,
                   child: SingleChildScrollView(
@@ -1247,45 +1237,68 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Divider(
                       thickness: 1.5,
-                      color: 'C3C3C3'.toColor(),
+                      color: textDark,
                       height: 1,
                     ),
                     GestureDetector(
                       onTap: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        logout(widget.token);
-                        FirebaseAuth.instance.signOut();
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                                backgroundColor: dasarDark,
+                                content: Text(
+                                  'Yakin akan keluar?',
+                                  style: GoogleFonts.poppins().copyWith(fontSize: 12, color: textDark),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text(
+                                      'Tidak',
+                                      style: GoogleFonts.poppins().copyWith(
+                                        fontSize: 12,
+                                        color: textDark,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text(
+                                      'Ya',
+                                      style: GoogleFonts.poppins().copyWith(
+                                        fontSize: 12,
+                                        color: textDark,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      logout(widget.token);
+                                      FirebaseAuth.instance.signOut();
+                                    },
+                                  ),
+                                ]);
+                          },
+                        );
                       },
                       child: Container(
                         padding: const EdgeInsets.only(
                             left: 15, top: 10, bottom: 10),
-                        color: Colors.white,
-                        child: (isLoading == true)
-                            ? Center(
-                                child: Container(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    color: 'FF6969'.toColor(),
-                                  ),
-                                ),
-                              )
-                            : Row(
-                                children: [
-                                  const Icon(Icons.logout, size: 18),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    'Sign Out',
-                                    style: GoogleFonts.poppins().copyWith(
-                                      fontWeight: FontWeight.w300,
-                                      color: '555555'.toColor(),
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                        color: navigasiDark,
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout, size: 18, color: textDark,),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Sign Out',
+                              style: GoogleFonts.poppins().copyWith(
+                                fontWeight: FontWeight.w300,
+                                color: textDark,
+                                fontSize: 12,
                               ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

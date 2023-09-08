@@ -27,8 +27,6 @@ class _list_historyState extends State<list_history> {
     );
     Map<String, dynamic> body = jsonDecode(res.body);
 
-    print('WKWKWK ${res.body}');
-
     if (res.statusCode == 200) {
       bool data = body["data"];
 
@@ -37,13 +35,14 @@ class _list_historyState extends State<list_history> {
       Navigator.of(context).pop();
 
       Fluttertoast.showToast(
-          msg: "Berhasil menghapus pertanyaan!",
+          msg: "Berhasil menghapus history!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
-          backgroundColor: 'FF6969'.toColor(),
-          textColor: Colors.white,
-          fontSize: 16.0);
+          backgroundColor: dasarDark,
+          textColor: textDark,
+          fontSize: 16.0,
+      );
     } else {
       throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
     }
@@ -68,13 +67,13 @@ class _list_historyState extends State<list_history> {
                 Navigator.of(context).pop();
               },
               child: Container(
-                color: Colors.white,
+                color: navigasiDark,
                 width: MediaQuery.of(context).size.width - 125,
                 padding: const EdgeInsets.all(5),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.chat_outlined, size: 20),
+                    Icon(Icons.chat_outlined, size: 20, color: textDark,),
                     const SizedBox(width: 7),
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 162,
@@ -83,7 +82,7 @@ class _list_historyState extends State<list_history> {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins().copyWith(
                           fontWeight: FontWeight.bold,
-                          color: '555555'.toColor(),
+                          color: textDark,
                           fontSize: 10,
                         ),
                       ),
@@ -98,24 +97,20 @@ class _list_historyState extends State<list_history> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
+                        backgroundColor: dasarDark,
                         content: Text(
                           'Yakin mau menghapus history?',
-                          style:
-                          GoogleFonts.poppins().copyWith(fontSize: 12),
+                          style: GoogleFonts.poppins().copyWith(fontSize: 12, color: textDark),
                         ),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('Tidak', style: GoogleFonts.poppins().copyWith(fontSize: 12, color: 'FF8182'.toColor(),),),
+                            child: Text('Tidak', style: GoogleFonts.poppins().copyWith(fontSize: 12, color: textDark,),),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),
                           TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle:
-                              Theme.of(context).textTheme.labelLarge,
-                            ),
-                            child: Text('Ya', style: GoogleFonts.poppins().copyWith(fontSize: 12, color: 'FF8182'.toColor(),),),
+                            child: Text('Ya', style: GoogleFonts.poppins().copyWith(fontSize: 12, color: textDark,),),
                             onPressed: () {
                               deleted();
                             },
@@ -125,23 +120,23 @@ class _list_historyState extends State<list_history> {
                 );
               },
               child: Container(
-                color: Colors.white,
+                color: navigasiDark,
                 child: Icon(
                   Icons.delete,
-                  color: '555555'.toColor(),
+                  color: textDark,
                   size: 15,
                 ),
               ),
             ),
             Icon(
               Icons.chevron_right,
-              color: '555555'.toColor(),
+              color: textDark,
             ),
           ],
         ),
         Divider(
           thickness: 1.5,
-          color: 'ECECEC'.toColor(),
+          color: textDark,
           height: 5,
         ),
       ],

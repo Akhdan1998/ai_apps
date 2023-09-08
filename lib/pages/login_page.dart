@@ -11,9 +11,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: dasarDark,
       body: Container(
-        padding: EdgeInsets.only(left: 30, right: 30),
+        padding: const EdgeInsets.only(left: 30, right: 30),
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
               'Halo Bunda,',
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.bold,
-                color: '323232'.toColor(),
+                color: textDark,
                 fontSize: 24,
               ),
             ),
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.w300,
-                color: '989797'.toColor(),
+                color: textDark,
                 fontSize: 12,
               ),
             ),
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: Colors.white,
+        color: dasarDark,
         padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
         child: GestureDetector(
           onTap: () async {
@@ -57,14 +57,14 @@ class _LoginPageState extends State<LoginPage> {
           child: Container(
             height: 35,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: dasarDark,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: textDark,
                   spreadRadius: 1,
                   blurRadius: 1,
-                  offset: const Offset(0, 0), // changes position of shadow
+                  offset: const Offset(0, 0),
                 ),
               ],
             ),
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.5,
-                          color: 'FF6969'.toColor(),
+                          color: textDark,
                         ),
                       ),
                     )
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: GoogleFonts.poppins().copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 10,
-                            color: '6D6D6D'.toColor(),
+                            color: textDark,
                           ),
                         ),
                       ],

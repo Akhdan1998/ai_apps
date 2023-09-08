@@ -1,3 +1,4 @@
+import 'package:ai_apps/themes/color.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';

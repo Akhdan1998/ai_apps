@@ -18,7 +18,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(15),
-      color: Colors.white,
+      color: chatUserDark,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +44,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
               widget.aiModel.content ?? '',
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.w300,
-                color: '484848'.toColor(),
+                color: textDark,
                 fontSize: 12,
               ),
             ),
@@ -66,7 +66,7 @@ class ChatRobotCard extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(15),
-      color: 'FFF4F4'.toColor(),
+      color: dasarDark,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +80,7 @@ class ChatRobotCard extends StatelessWidget {
               aiModel.content ?? '',
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.w300,
-                color: '484848'.toColor(),
+                color: textDark,
                 height: 1.7,
                 fontSize: 12,
               ),
@@ -150,7 +150,7 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(15),
-      color: Colors.white,
+      color: chatUserDark,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,8 +177,8 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
               size: Size(MediaQuery.of(context).size.width, 500.0),
               playerController: controllerWave,
               playerWaveStyle: PlayerWaveStyle(
-                fixedWaveColor: '6E757B'.toColor(),
-                liveWaveColor: 'C7C7C9'.toColor(),
+                fixedWaveColor: textDark,
+                liveWaveColor: textDark,
                 seekLineColor: 'FF6969'.toColor(),
                 waveCap: StrokeCap.round,
               ),

@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:ai_apps/themes/color.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:ai_apps/models/auth.dart';
 import 'package:ai_apps/models/logreg.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+
 // import 'package:ffmpeg_kit_flutter/ffmpeg_kit_config.dart';
 // import 'package:ffmpeg_kit_flutter/ffprobe_kit.dart';
 // import 'package:ffmpeg_kit_flutter/ffmpeg_session.dart';
@@ -44,9 +47,10 @@ import '../services/LogReg_services.dart';
 import '../widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+// import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:record_mp3/record_mp3.dart';
 import 'package:path_provider/path_provider.dart';
+
 part 'edit.dart';
 
 part 'list_history.dart';
@@ -58,4 +62,3 @@ part 'login_page.dart';
 String? selectedRandomId;
 bool showChat = true;
 bool showContoh = false;
-
