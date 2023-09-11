@@ -18,7 +18,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(15),
-      color: chatUserDark,
+      color: (darkLight != true) ? chatUserDark : textDark,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +44,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
               widget.aiModel.content ?? '',
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.w300,
-                color: textDark,
+                color: (darkLight != true) ? textDark : textLight3,
                 fontSize: 12,
               ),
             ),
@@ -66,7 +66,7 @@ class ChatRobotCard extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(15),
-      color: dasarDark,
+      color: (darkLight != true) ? dasarDark : chatUserLight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +80,7 @@ class ChatRobotCard extends StatelessWidget {
               aiModel.content ?? '',
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.w300,
-                color: textDark,
+                color: (darkLight != true) ? textDark : textLight3,
                 height: 1.7,
                 fontSize: 12,
               ),
@@ -127,18 +127,21 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
       path: audioFilePath,
       noOfSamples: 100,
     );
-    await controllerWave.startPlayer(finishMode: FinishMode.stop);
-    final duration = await controllerWave.getDuration(DurationType.max);
-    controllerWave.onPlayerStateChanged.listen((state) {});
-    controllerWave.onCurrentDurationChanged.listen((duration) {});
-    controllerWave.onCurrentExtractedWaveformData.listen((data) {});
-    controllerWave.onExtractionProgress.listen((progress) {});
+    controllerWave.onPlayerStateChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.playing;
+      });
+    });
     controllerWave.onCompletion.listen((_) {
       setState(() {
         isPlaying = false;
       });
     });
+    await controllerWave.startPlayer(finishMode: FinishMode.stop);
     controllerWave.updateFrequency = UpdateFrequency.low;
+    controllerWave.onCurrentDurationChanged.listen((newDuration) {});
+    controllerWave.onCurrentExtractedWaveformData.listen((data) {});
+    controllerWave.onExtractionProgress.listen((progress) {});
   }
 
   Future pauseAudio() async {
@@ -150,7 +153,7 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(15),
-      color: chatUserDark,
+      color: (darkLight != true) ? chatUserDark : textDark,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,8 +180,8 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
               size: Size(MediaQuery.of(context).size.width, 500.0),
               playerController: controllerWave,
               playerWaveStyle: PlayerWaveStyle(
-                fixedWaveColor: textDark,
-                liveWaveColor: textDark,
+                fixedWaveColor: (darkLight != true) ? textDark : frekuensiLight,
+                liveWaveColor: (darkLight != true) ? textDark : frekuensiLight,
                 seekLineColor: 'FF6969'.toColor(),
                 waveCap: StrokeCap.round,
               ),
@@ -201,16 +204,16 @@ class _VoiceUserCardState extends State<VoiceUserCard> {
               padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                color: 'A5A5A5'.toColor(),
+                color: buttonDark,
               ),
               child: (isPlaying == true)
-                  ? const Icon(
+                  ? Icon(
                       Icons.pause,
-                      color: Colors.white,
+                      color: textDark,
                     )
-                  : const Icon(
+                  : Icon(
                       Icons.play_arrow,
-                      color: Colors.white,
+                      color: textDark,
                     ),
             ),
           ),

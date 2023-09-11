@@ -35,7 +35,7 @@ class _editState extends State<edit> {
       context.read<DataUserCubit>().getData(widget.token);
       Get.off(HomePage(widget.token));
       Flushbar(
-        backgroundColor: dasarDark,
+        backgroundColor: (darkLight != true) ? dasarDark : warnaUtama,
         borderRadius: BorderRadius.circular(10),
         duration: Duration(seconds: 3),
         margin: EdgeInsets.all(15),
@@ -98,9 +98,9 @@ class _editState extends State<edit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: dasarDark,
+      backgroundColor: (darkLight != true) ? dasarDark : textDark,
       appBar: AppBar(
-        backgroundColor: navigasiDark,
+        backgroundColor: (darkLight != true) ? navigasiDark : textDark,
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () {
@@ -108,7 +108,7 @@ class _editState extends State<edit> {
           },
           icon: Icon(
             Icons.arrow_back,
-            color: textDark,
+            color: (darkLight != true) ? textDark : textLight7,
           ),
         ),
         title: Text(
@@ -116,7 +116,7 @@ class _editState extends State<edit> {
           style: GoogleFonts.poppins().copyWith(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: textDark,
+            color: (darkLight != true) ? textDark : textLight7,
           ),
         ),
       ),
@@ -182,7 +182,7 @@ class _editState extends State<edit> {
                     height: 30,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
-                      color: navigasiDark,
+                      color: (darkLight != true) ? navigasiDark : warnaUtama,
                     ),
                     child: Icon(Icons.edit, color: textDark, size: 18),
                   ),
@@ -202,37 +202,44 @@ class _editState extends State<edit> {
                         style: GoogleFonts.poppins().copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
-                          color: textDark,
+                          color: (darkLight != true) ? textDark : textLight7,
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: textFieldDark
+                      TextField(
+                        style: TextStyle(color: (darkLight != true)
+                            ? textDark
+                            : textLight5,
                         ),
-                        child: TextField(
-                          style: TextStyle(color: textDark),
-                          cursorColor: 'FF6969'.toColor(),
-                          controller: namaAndaEditingController,
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
-                              borderSide:
-                                  BorderSide(width: 1, color: textDark,),
+                        cursorColor: 'FF6969'.toColor(),
+                        controller: namaAndaEditingController,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: (darkLight != true) ? textFieldDark : textFieldLight,
                             ),
-                            contentPadding: const EdgeInsets.only(
-                                left: 10, top: 5, bottom: 5),
-                            hintStyle: GoogleFonts.poppins().copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                              color: '989797'.toColor(),
-                            ),
-                            hintText: 'Nama panggilan',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                          ),
+                          fillColor: (darkLight != true)
+                              ? textFieldDark
+                              : textDark,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
+                            borderSide:
+                                BorderSide(width: 1, color: (darkLight != true) ? textDark : warnaUtama,),
+                          ),
+                          contentPadding: const EdgeInsets.only(
+                              left: 10, top: 5, bottom: 5),
+                          hintStyle: GoogleFonts.poppins().copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: '989797'.toColor(),
+                          ),
+                          hintText: 'Nama panggilan',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
                           ),
                         ),
                       ),
@@ -281,7 +288,7 @@ class _editState extends State<edit> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: dasarDark,
+        color: (darkLight != true) ? dasarDark : textDark,
         padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         child: GestureDetector(
           onTap: () {
@@ -295,7 +302,7 @@ class _editState extends State<edit> {
             alignment: Alignment.center,
             height: 40,
             decoration: BoxDecoration(
-              color: navigasiDark,
+              color: (darkLight != true) ? navigasiDark : warnaUtama,
               borderRadius: BorderRadius.circular(8),
             ),
             child: (isLoading = true)

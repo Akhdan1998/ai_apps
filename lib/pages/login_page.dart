@@ -11,7 +11,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: dasarDark,
+      backgroundColor: (darkLight != true) ? dasarDark : textDark,
       body: Container(
         padding: const EdgeInsets.only(left: 30, right: 30),
         alignment: Alignment.center,
@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
               'Halo Bunda,',
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.bold,
-                color: textDark,
+                color: (darkLight != true) ? textDark : textLight9,
                 fontSize: 24,
               ),
             ),
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.w300,
-                color: textDark,
+                color: (darkLight != true) ? textDark : textLight10,
                 fontSize: 12,
               ),
             ),
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: dasarDark,
+        color: (darkLight != true) ? dasarDark : textDark,
         padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
         child: GestureDetector(
           onTap: () async {
@@ -57,11 +57,11 @@ class _LoginPageState extends State<LoginPage> {
           child: Container(
             height: 35,
             decoration: BoxDecoration(
-              color: dasarDark,
+              color: (darkLight != true) ? dasarDark : textDark,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: textDark,
+                  color: (darkLight != true) ? textDark : shadow,
                   spreadRadius: 1,
                   blurRadius: 1,
                   offset: const Offset(0, 0),
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.5,
-                          color: textDark,
+                          color: (darkLight != true) ? textDark : warnaUtama,
                         ),
                       ),
                     )
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: GoogleFonts.poppins().copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 10,
-                            color: textDark,
+                            color: (darkLight != true) ? textDark : textLight11,
                           ),
                         ),
                       ],

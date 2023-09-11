@@ -67,13 +67,17 @@ class _list_historyState extends State<list_history> {
                 Navigator.of(context).pop();
               },
               child: Container(
-                color: navigasiDark,
+                color: (darkLight != true) ? navigasiDark : textDark,
                 width: MediaQuery.of(context).size.width - 125,
                 padding: const EdgeInsets.all(5),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.chat_outlined, size: 20, color: textDark,),
+                    Icon(
+                      Icons.chat_outlined,
+                      size: 20,
+                      color: (darkLight != true) ? textDark : textLight3,
+                    ),
                     const SizedBox(width: 7),
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 162,
@@ -82,7 +86,7 @@ class _list_historyState extends State<list_history> {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins().copyWith(
                           fontWeight: FontWeight.bold,
-                          color: textDark,
+                          color: (darkLight != true) ? textDark : textLight8,
                           fontSize: 10,
                         ),
                       ),
@@ -97,20 +101,39 @@ class _list_historyState extends State<list_history> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                        backgroundColor: dasarDark,
+                        backgroundColor:
+                            (darkLight != true) ? dasarDark : textDark,
                         content: Text(
                           'Yakin mau menghapus history?',
-                          style: GoogleFonts.poppins().copyWith(fontSize: 12, color: textDark),
+                          style: GoogleFonts.poppins().copyWith(
+                              fontSize: 12,
+                              color:
+                                  (darkLight != true) ? textDark : textLight5,
+                          ),
                         ),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('Tidak', style: GoogleFonts.poppins().copyWith(fontSize: 12, color: textDark,),),
+                            child: Text(
+                              'Tidak',
+                              style: GoogleFonts.poppins().copyWith(
+                                fontSize: 12,
+                                color:
+                                    (darkLight != true) ? textDark : warnaUtama,
+                              ),
+                            ),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),
                           TextButton(
-                            child: Text('Ya', style: GoogleFonts.poppins().copyWith(fontSize: 12, color: textDark,),),
+                            child: Text(
+                              'Ya',
+                              style: GoogleFonts.poppins().copyWith(
+                                fontSize: 12,
+                                color:
+                                    (darkLight != true) ? textDark : warnaUtama,
+                              ),
+                            ),
                             onPressed: () {
                               deleted();
                             },
@@ -120,23 +143,23 @@ class _list_historyState extends State<list_history> {
                 );
               },
               child: Container(
-                color: navigasiDark,
+                color: (darkLight != true) ? navigasiDark : textDark,
                 child: Icon(
                   Icons.delete,
-                  color: textDark,
+                  color: (darkLight != true) ? textDark : buttonLight1,
                   size: 15,
                 ),
               ),
             ),
             Icon(
               Icons.chevron_right,
-              color: textDark,
+              color: (darkLight != true) ? textDark : buttonLight1,
             ),
           ],
         ),
         Divider(
           thickness: 1.5,
-          color: textDark,
+          color: (darkLight != true) ? textDark : divider,
           height: 5,
         ),
       ],
