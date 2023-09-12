@@ -74,7 +74,6 @@ class ChatRobotCard extends StatelessWidget {
           Image.asset('assets/parentoday.png', scale: 2),
           const SizedBox(width: 10),
           Container(
-            // constraints: const BoxConstraints(maxWidth: 800),
             width: MediaQuery.of(context).size.width - 65,
             child: Text(
               aiModel.content ?? '',
@@ -99,7 +98,8 @@ class VoiceUserCard extends StatefulWidget {
   final DataUser userData;
   final String token;
 
-  VoiceUserCard(this.userData, this.token); // VoiceUserCard(this.aiModel, this.userData, this.token);
+  VoiceUserCard(this.userData,
+      this.token); // VoiceUserCard(this.aiModel, this.userData, this.token);
 
   @override
   State<VoiceUserCard> createState() => _VoiceUserCardState();

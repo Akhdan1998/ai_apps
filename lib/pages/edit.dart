@@ -207,35 +207,38 @@ class _editState extends State<edit> {
                       ),
                       const SizedBox(height: 5),
                       TextField(
-                        style: TextStyle(color: (darkLight != true)
-                            ? textDark
-                            : textLight5,
+                        style: TextStyle(
+                          color: (darkLight != true) ? textDark : textLight5,
                         ),
-                        cursorColor: 'FF6969'.toColor(),
+                        cursorColor:
+                            (darkLight != true) ? textDark : warnaUtama,
                         controller: namaAndaEditingController,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               width: 1,
-                              color: (darkLight != true) ? textFieldDark : textFieldLight,
+                              color:
+                                  (darkLight != true) ? textFieldDark : border,
                             ),
                           ),
-                          fillColor: (darkLight != true)
-                              ? textFieldDark
-                              : textDark,
+                          fillColor:
+                              (darkLight != true) ? textFieldDark : textDark,
                           filled: true,
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(5)),
-                            borderSide:
-                                BorderSide(width: 1, color: (darkLight != true) ? textDark : warnaUtama,),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color:
+                                  (darkLight != true) ? textDark : warnaUtama,
+                            ),
                           ),
                           contentPadding: const EdgeInsets.only(
                               left: 10, top: 5, bottom: 5),
                           hintStyle: GoogleFonts.poppins().copyWith(
                             fontSize: 12,
                             fontWeight: FontWeight.w300,
-                            color: '989797'.toColor(),
+                            color: textLight10,
                           ),
                           hintText: 'Nama panggilan',
                           border: OutlineInputBorder(

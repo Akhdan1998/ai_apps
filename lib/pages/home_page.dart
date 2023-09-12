@@ -423,15 +423,17 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Container(
                   color: (darkLight != true) ? navigasiDark : textDark,
-                  child: (darkLight != true) ? Icon(
-                    Icons.wb_sunny,
-                    color: (darkLight != true) ? textDark : buttonLight1,
-                    size: 20,
-                  ) : Icon(
-                    Icons.dark_mode,
-                    color: (darkLight != true) ? textDark : buttonLight1,
-                    size: 20,
-                  ),
+                  child: (darkLight != true)
+                      ? Icon(
+                          Icons.wb_sunny,
+                          color: (darkLight != true) ? textDark : buttonLight1,
+                          size: 20,
+                        )
+                      : Icon(
+                          Icons.dark_mode,
+                          color: (darkLight != true) ? textDark : buttonLight1,
+                          size: 20,
+                        ),
                 ),
               ),
               const SizedBox(width: 25),
@@ -857,7 +859,9 @@ class _HomePageState extends State<HomePage> {
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 width: 1,
-                                                color: (darkLight != true) ? textFieldDark : textFieldLight,
+                                                color: (darkLight != true)
+                                                    ? textFieldDark
+                                                    : textFieldLight,
                                               ),
                                             ),
                                             focusedBorder: OutlineInputBorder(
@@ -865,10 +869,10 @@ class _HomePageState extends State<HomePage> {
                                                   const BorderRadius.all(
                                                       Radius.circular(5)),
                                               borderSide: BorderSide(
-                                                  width: 1,
-                                                  color: (darkLight != true)
-                                                      ? dasarDark
-                                                      : warnaUtama,
+                                                width: 1,
+                                                color: (darkLight != true)
+                                                    ? dasarDark
+                                                    : warnaUtama,
                                               ),
                                             ),
                                             contentPadding:
@@ -1119,7 +1123,9 @@ class _HomePageState extends State<HomePage> {
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poppins().copyWith(
                                       fontWeight: FontWeight.w300,
-                                      color: (darkLight != true) ? textDark : textLight2,
+                                      color: (darkLight != true)
+                                          ? textDark
+                                          : textLight2,
                                       fontSize: 11,
                                     ),
                                   ),
@@ -1162,7 +1168,9 @@ class _HomePageState extends State<HomePage> {
                                     backgroundImage: NetworkImage(
                                         snapshot.dataUser!.profile_photo_url ??
                                             ''),
-                                    backgroundColor: textDark,
+                                    backgroundColor: (darkLight != true)
+                                        ? navigasiDark
+                                        : textDark,
                                   ),
                                   const SizedBox(width: 10),
                                   Column(
@@ -1400,9 +1408,8 @@ class _HomePageState extends State<HomePage> {
                               'Sign Out',
                               style: GoogleFonts.poppins().copyWith(
                                 fontWeight: FontWeight.w300,
-                                color: (darkLight != true)
-                                    ? textDark
-                                    : textLight8,
+                                color:
+                                    (darkLight != true) ? textDark : textLight8,
                                 fontSize: 12,
                               ),
                             ),
