@@ -402,9 +402,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width - 155,
+                    width: MediaQuery.of(context).size.width - 100,
                     child: Text(
-                      'Mengatasi masalah parentingmu dengan cepat dan efisien',
+                      'Menjawab semua masalah parentingmu dengan cepat dan efisien',
                       maxLines: 2,
                       style: GoogleFonts.poppins().copyWith(
                         fontWeight: FontWeight.w300,
@@ -436,31 +436,31 @@ class _HomePageState extends State<HomePage> {
                         ),
                 ),
               ),
-              const SizedBox(width: 25),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    (voice = !voice);
-                  });
-                },
-                child: (voice != true)
-                    ? Container(
-                        color: (darkLight != true) ? navigasiDark : textDark,
-                        child: Icon(
-                          Icons.keyboard_voice,
-                          color: (darkLight != true) ? textDark : buttonLight1,
-                          size: 20,
-                        ),
-                      )
-                    : Container(
-                        color: (darkLight != true) ? navigasiDark : textDark,
-                        child: Icon(
-                          Icons.mic_off,
-                          color: (darkLight != true) ? textDark : buttonLight1,
-                          size: 20,
-                        ),
-                      ),
-              ),
+              // const SizedBox(width: 25),
+              // GestureDetector(
+              //   onTap: () {
+              //     setState(() {
+              //       (voice = !voice);
+              //     });
+              //   },
+              //   child: (voice != true)
+              //       ? Container(
+              //           color: (darkLight != true) ? navigasiDark : textDark,
+              //           child: Icon(
+              //             Icons.keyboard_voice,
+              //             color: (darkLight != true) ? textDark : buttonLight1,
+              //             size: 20,
+              //           ),
+              //         )
+              //       : Container(
+              //           color: (darkLight != true) ? navigasiDark : textDark,
+              //           child: Icon(
+              //             Icons.mic_off,
+              //             color: (darkLight != true) ? textDark : buttonLight1,
+              //             size: 20,
+              //           ),
+              //         ),
+              // ),
             ],
           ),
         ),
