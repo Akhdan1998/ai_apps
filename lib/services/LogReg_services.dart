@@ -27,10 +27,6 @@ void LogRegGoogle(
         Get.off(HomePage(data.access_token!));
       }
     });
-
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Get.off(HomePage(data.access_token!));
-    // prefs.setBool('auth', true);
   } else {
     throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
   }

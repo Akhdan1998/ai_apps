@@ -61,6 +61,8 @@ class _HomePageState extends State<HomePage> {
         context
             .read<AiCubit>()
             .getAi(widget.token, selectedRandomId ?? '');
+
+        showContoh = true;
       } else {}
     });
   }
