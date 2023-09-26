@@ -1,13 +1,27 @@
 part of 'pages.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final PrefServices _prefServices = PrefServices();
   bool isLoading = false;
-
+  @override
+  void initState() {
+    super.initState();
+    _prefServices.readCache('emailGoogle').then((value) {
+      print(value.toString());
+      if (value != null) {
+        return Get.to(HomePage(value));
+      } else {
+        return LoginPage();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             Text(
               'Halo Bunda,',
+              textAlign: TextAlign.center,
               style: GoogleFonts.poppins().copyWith(
                 fontWeight: FontWeight.bold,
                 color: (darkLight != true) ? textDark : textLight9,
@@ -44,15 +59,13 @@ class _LoginPageState extends State<LoginPage> {
       ),
       bottomNavigationBar: Container(
         color: (darkLight != true) ? dasarDark : textDark,
-        padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
+        padding: const EdgeInsets.only(left: 30, right: 30, bottom: 30),
         child: GestureDetector(
           onTap: () async {
             setState(() {
               isLoading = true;
             });
-            await signInWithGoogle()
-                          .then((result) {})
-                          .catchError((error) {});
+            await signInWithGoogle().then((result) {}).catchError((error) {});
           },
           child: Container(
             height: 35,

@@ -56,11 +56,13 @@ class _list_historyState extends State<list_history> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 setState(() {
                   selectedRandomId = widget.history!.random_id;
                   widget.isShowContoh!(true);
                 });
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setString('selectedRandomId', selectedRandomId!);
                 context
                     .read<AiCubit>()
                     .getAi(widget.token, widget.history!.random_id ?? '');

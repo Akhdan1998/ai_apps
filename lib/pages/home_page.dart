@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   final tanya3 = TextEditingController(text: 'Cara mengatasi anak susah makan');
   final pertanyaan = TextEditingController();
   final pertanyaanBaru = TextEditingController();
+  final PrefServices _prefServices = PrefServices();
   FocusNode focusNode = FocusNode();
   File? audioFile;
   bool isLoading = false;
@@ -51,6 +52,17 @@ class _HomePageState extends State<HomePage> {
     context.read<DataUserCubit>().getData(widget.token);
     context.read<HistoryCubit>().getHistory(widget.token);
     initRecorder();
+    _prefServices.historyCache().then((value) {
+      if (value != null) {
+        setState(() {
+          selectedRandomId = value;
+        });
+
+        context
+            .read<AiCubit>()
+            .getAi(widget.token, selectedRandomId ?? '');
+      } else {}
+    });
   }
 
   @override

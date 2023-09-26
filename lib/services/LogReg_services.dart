@@ -21,9 +21,16 @@ void LogRegGoogle(
   if (res.statusCode == 200) {
     LoginUser data = LoginUser.fromJson(body['data']);
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Get.off(HomePage(data.access_token!));
-    prefs.setBool('auth', true);
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    _preferences.setString('emailGoogle', data.access_token!).whenComplete(() {
+      if (userEmail.isNotEmpty) {
+        Get.off(HomePage(data.access_token!));
+      }
+    });
+
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Get.off(HomePage(data.access_token!));
+    // prefs.setBool('auth', true);
   } else {
     throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
   }

@@ -44,6 +44,7 @@ import '../models/edit_profil.dart';
 import '../models/history.dart';
 import '../models/models.dart';
 import '../services/LogReg_services.dart';
+import '../services/shared_preferences_services.dart';
 import '../widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
