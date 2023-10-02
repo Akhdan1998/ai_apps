@@ -17,7 +17,8 @@ class _editState extends State<edit> {
   final namaAndaEditingController = TextEditingController();
 
   void saveData(String namaAnda) async {
-    Uri url = Uri.parse('https://dashboard.parentoday.com/api/user');
+    // Uri url = Uri.parse('https://dashboard.parentoday.com/api/user');
+    Uri url = Uri.parse('http://34.101.144.153/api/user');
     var response = await http.post(
       url,
       body: {
@@ -49,7 +50,8 @@ class _editState extends State<edit> {
 
   Future<ApiReturnFoto<String>> uploadPhoto(File photoFile,
       {String? token, http.MultipartRequest? request}) async {
-    String url = 'https://dashboard.parentoday.com/api/user/photo';
+    // String url = 'https://dashboard.parentoday.com/api/user/photo';
+    String url = 'http://34.101.144.153/api/user/photo';
     var uri = Uri.parse(url);
 
     request = http.MultipartRequest('POST', uri)

@@ -13,8 +13,9 @@ class list_history extends StatefulWidget {
 
 class _list_historyState extends State<list_history> {
   void deleted() async {
-    Uri url_ = Uri.parse(
-        'https://dashboard.parentoday.com/api/chat/ai/history/delete');
+    // Uri url_ = Uri.parse(
+    //     'https://dashboard.parentoday.com/api/chat/ai/history/delete');
+    Uri url_ = Uri.parse('http://34.101.158.59/api/chat/ai/history/delete');
     var res = await http.post(
       url_,
       body: {

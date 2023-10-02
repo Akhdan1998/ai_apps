@@ -13,8 +13,19 @@ class PrefServices {
     return cache;
   }
 
+  Future themeCache() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    String? cache = _preferences.getString('darkLight');
+    return cache;
+  }
+
   Future removeCache(String emailGoogle) async {
     SharedPreferences _preferences = await SharedPreferences.getInstance();
     _preferences.remove('emailGoogle');
+  }
+
+  Future removeHistory(String selectedRandomId) async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    _preferences.remove('selectedRandomId');
   }
 }

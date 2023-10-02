@@ -6,7 +6,8 @@ import '../models/data_user.dart';
 class DataUserServices {
   static Future<ApiReturnData<DataUser>?> getData(String token,
       {http.Client? client}) async {
-    String baseUrl = 'https://dashboard.parentoday.com/api/user';
+    // String baseUrl = 'https://dashboard.parentoday.com/api/user';
+    String baseUrl = 'http://34.101.144.153/api/user';
     if (client == null) {
       client = http.Client();
     }

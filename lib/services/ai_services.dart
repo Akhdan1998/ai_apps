@@ -4,8 +4,10 @@ part of 'services.dart';
 class AiServices {
   static Future<ApiReturnValue<List<Ai>>?> getAi(String token, random_id,
       {http.Client? client}) async {
+    // String baseUrl =
+    //     'https://dashboard.parentoday.com/api/chat/ai?random_id=${random_id}';
     String baseUrl =
-        'https://dashboard.parentoday.com/api/chat/ai?random_id=${random_id}';
+        'http://34.101.144.153/api/chat/ai?random_id=${random_id}';
     if (client == null) {
       client = http.Client();
     }

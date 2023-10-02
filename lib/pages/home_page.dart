@@ -65,6 +65,17 @@ class _HomePageState extends State<HomePage> {
         showContoh = true;
       } else {}
     });
+
+    _prefServices.themeCache().then((value) {
+      if (value != null && value != '') {
+        String stringValue = value;
+        bool boolValue = stringValue.toLowerCase() == "true";
+
+        setState(() {
+          darkLight = boolValue;
+        });
+      } else {}
+    });
   }
 
   @override
@@ -74,7 +85,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void logout(String id) async {
-    Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/logout');
+    // Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/logout');
+    Uri url_ = Uri.parse('http://34.101.144.153/api/logout');
     var res = await http.post(
       url_,
       headers: {
@@ -98,7 +110,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<Ai>> cari() async {
-    Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai');
+    // Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai');
+    Uri url_ = Uri.parse('http://34.101.144.153/api/chat/ai');
     var res = await http.post(
       url_,
       body: {
@@ -125,7 +138,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<Ai>> contoh1() async {
-    Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai');
+    // Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai');
+    Uri url_ = Uri.parse('http://34.101.144.153/api/chat/ai');
     var res = await http.post(
       url_,
       body: {
@@ -152,7 +166,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<Ai>> contoh2() async {
-    Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai');
+    // Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai');
+    Uri url_ = Uri.parse('http://34.101.144.153/api/chat/ai');
     var res = await http.post(
       url_,
       body: {
@@ -179,7 +194,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<Ai>> contoh3() async {
-    Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai');
+    // Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/chat/ai');
+    Uri url_ = Uri.parse('http://34.101.144.153/api/chat/ai');
     var res = await http.post(
       url_,
       body: {
@@ -395,6 +411,9 @@ class _HomePageState extends State<HomePage> {
         key: _scaffoldKey,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          shadowColor: (darkLight != true)
+              ? textDark
+              : navigasiDark,
           backgroundColor: (darkLight != true) ? navigasiDark : textDark,
           automaticallyImplyLeading: false,
           elevation: 1.5,
@@ -430,10 +449,12 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   setState(() {
                     (darkLight = !darkLight);
                   });
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('darkLight', darkLight.toString());
                 },
                 child: Container(
                   color: (darkLight != true) ? navigasiDark : textDark,
@@ -450,31 +471,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                 ),
               ),
-              // const SizedBox(width: 25),
-              // GestureDetector(
-              //   onTap: () {
-              //     setState(() {
-              //       (voice = !voice);
-              //     });
-              //   },
-              //   child: (voice != true)
-              //       ? Container(
-              //           color: (darkLight != true) ? navigasiDark : textDark,
-              //           child: Icon(
-              //             Icons.keyboard_voice,
-              //             color: (darkLight != true) ? textDark : buttonLight1,
-              //             size: 20,
-              //           ),
-              //         )
-              //       : Container(
-              //           color: (darkLight != true) ? navigasiDark : textDark,
-              //           child: Icon(
-              //             Icons.mic_off,
-              //             color: (darkLight != true) ? textDark : buttonLight1,
-              //             size: 20,
-              //           ),
-              //         ),
-              // ),
             ],
           ),
         ),
@@ -1254,9 +1250,10 @@ class _HomePageState extends State<HomePage> {
                 left: 15,
                 top: 75,
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     context.read<AiCubit>().getAi(widget.token, '');
-
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    await prefs.setString('selectedRandomId', '');
                     setState(() {
                       time = DateTime.now().millisecondsSinceEpoch.toString();
                       selectedRandomId = null;
@@ -1397,8 +1394,15 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      logout(widget.token);
-                                      FirebaseAuth.instance.signOut();
+                                      _prefServices.removeCache('emailGoogle').whenComplete(() {
+                                        logout(widget.token);
+                                        FirebaseAuth.instance.signOut();
+                                      }).catchError((onError){
+                                        print('SignOut Error: $onError');
+                                      });
+                                      _prefServices.removeHistory('selectedRandomId').whenComplete(() {
+                                        print('keluar');
+                                      });
                                     },
                                   ),
                                 ]);

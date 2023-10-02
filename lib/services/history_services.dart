@@ -7,7 +7,8 @@ import '../models/history.dart';
 class HistoryServices {
   static Future<ApiReturnHistory<List<HistoryModel>>?> getHistory(String token,
       {http.Client? client}) async {
-    String baseUrl = 'https://dashboard.parentoday.com/api/chat/ai/history';
+    // String baseUrl = 'https://dashboard.parentoday.com/api/chat/ai/history';
+    String baseUrl = 'http://34.101.144.153/api/chat/ai/history';
     if (client == null) {
       client = http.Client();
     }
