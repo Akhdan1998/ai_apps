@@ -101,6 +101,10 @@ class _editState extends State<edit> {
     return Scaffold(
       backgroundColor: (darkLight != true) ? dasarDark : textDark,
       appBar: AppBar(
+        shadowColor: (darkLight != true)
+            ? textDark
+            : navigasiDark,
+        elevation: 1.5,
         backgroundColor: (darkLight != true) ? navigasiDark : textDark,
         automaticallyImplyLeading: false,
         leading: IconButton(

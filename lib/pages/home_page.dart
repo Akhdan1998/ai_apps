@@ -76,6 +76,8 @@ class _HomePageState extends State<HomePage> {
         });
       } else {}
     });
+
+    showContoh = true;
   }
 
   @override
