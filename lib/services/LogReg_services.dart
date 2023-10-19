@@ -7,8 +7,7 @@ import '../pages/pages.dart';
 
 void LogRegGoogle(
     String name, String userEmail, String uid, String imageUrl) async {
-  // Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/login_register');
-  Uri url_ = Uri.parse('http://34.101.144.153/api/login_register');
+  Uri url_ = Uri.parse('https://dashboard.parentoday.com/api/login_register');
   var res = await http.post(
     url_,
     body: {

@@ -13,9 +13,8 @@ class list_history extends StatefulWidget {
 
 class _list_historyState extends State<list_history> {
   void deleted() async {
-    // Uri url_ = Uri.parse(
-    //     'https://dashboard.parentoday.com/api/chat/ai/history/delete');
-    Uri url_ = Uri.parse('http://34.101.158.59/api/chat/ai/history/delete');
+    Uri url_ = Uri.parse(
+        'https://dashboard.parentoday.com/api/chat/ai/history/delete');
     var res = await http.post(
       url_,
       body: {
@@ -36,13 +35,13 @@ class _list_historyState extends State<list_history> {
       Navigator.of(context).pop();
 
       Fluttertoast.showToast(
-          msg: "Berhasil menghapus history!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 3,
-          backgroundColor: dasarDark,
-          textColor: textDark,
-          fontSize: 16.0,
+        msg: "Berhasil menghapus history!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: dasarDark,
+        textColor: textDark,
+        fontSize: 16.0,
       );
     } else {
       throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
@@ -67,6 +66,7 @@ class _list_historyState extends State<list_history> {
                 context
                     .read<AiCubit>()
                     .getAi(widget.token, widget.history!.random_id ?? '');
+                showChat = true;
                 Navigator.of(context).pop();
               },
               child: Container(
@@ -109,9 +109,8 @@ class _list_historyState extends State<list_history> {
                         content: Text(
                           'Yakin mau menghapus history?',
                           style: GoogleFonts.poppins().copyWith(
-                              fontSize: 12,
-                              color:
-                                  (darkLight != true) ? textDark : textLight5,
+                            fontSize: 12,
+                            color: (darkLight != true) ? textDark : textLight5,
                           ),
                         ),
                         actions: <Widget>[

@@ -17,8 +17,7 @@ class _editState extends State<edit> {
   final namaAndaEditingController = TextEditingController();
 
   void saveData(String namaAnda) async {
-    // Uri url = Uri.parse('https://dashboard.parentoday.com/api/user');
-    Uri url = Uri.parse('http://34.101.144.153/api/user');
+    Uri url = Uri.parse('https://dashboard.parentoday.com/api/user');
     var response = await http.post(
       url,
       body: {
@@ -50,8 +49,7 @@ class _editState extends State<edit> {
 
   Future<ApiReturnFoto<String>> uploadPhoto(File photoFile,
       {String? token, http.MultipartRequest? request}) async {
-    // String url = 'https://dashboard.parentoday.com/api/user/photo';
-    String url = 'http://34.101.144.153/api/user/photo';
+    String url = 'https://dashboard.parentoday.com/api/user/photo';
     var uri = Uri.parse(url);
 
     request = http.MultipartRequest('POST', uri)
@@ -101,9 +99,7 @@ class _editState extends State<edit> {
     return Scaffold(
       backgroundColor: (darkLight != true) ? dasarDark : textDark,
       appBar: AppBar(
-        shadowColor: (darkLight != true)
-            ? textDark
-            : navigasiDark,
+        shadowColor: (darkLight != true) ? textDark : navigasiDark,
         elevation: 1.5,
         backgroundColor: (darkLight != true) ? navigasiDark : textDark,
         automaticallyImplyLeading: false,
@@ -140,41 +136,41 @@ class _editState extends State<edit> {
                   Positioned(
                     child: _image != null
                         ? Container(
-                      padding: EdgeInsets.all(10),
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover, image: FileImage(_image!)),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    )
+                            padding: EdgeInsets.all(10),
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.cover, image: FileImage(_image!)),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          )
                         : (widget.dataUser.profile_photo_url ==
-                        "https://dashboard.parentoday.com/storage/")
-                        ? Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        image: const DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage('assets/mom.png'),
-                        ),
-                      ),
-                    )
-                        : Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              widget.dataUser.profile_photo_url ??
-                                  ''),
-                        ),
-                      ),
-                    ),
+                                "https://dashboard.parentoday.com/storage/")
+                            ? Container(
+                                width: 120,
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  image: const DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage('assets/mom.png'),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: 120,
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        widget.dataUser.profile_photo_url ??
+                                            ''),
+                                  ),
+                                ),
+                              ),
                   ),
                   Positioned(
                     bottom: 5,
@@ -188,7 +184,8 @@ class _editState extends State<edit> {
                         height: 30,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
-                          color: (darkLight != true) ? navigasiDark : warnaUtama,
+                          color:
+                              (darkLight != true) ? navigasiDark : warnaUtama,
                         ),
                         child: Icon(Icons.edit, color: textDark, size: 18),
                       ),
@@ -230,8 +227,9 @@ class _editState extends State<edit> {
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 1,
-                                color:
-                                    (darkLight != true) ? textFieldDark : border,
+                                color: (darkLight != true)
+                                    ? textFieldDark
+                                    : border,
                               ),
                             ),
                             fillColor:
