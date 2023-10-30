@@ -18,6 +18,7 @@ import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:typewritertext/typewritertext.dart';
 import 'package:universal_io/io.dart';
 import 'dart:io';
 import 'package:collection/collection.dart';
@@ -64,4 +65,5 @@ String? selectedRandomId;
 bool showChat = true;
 bool showContoh = false;
 bool darkLight = false;
+bool kosong = false;
 

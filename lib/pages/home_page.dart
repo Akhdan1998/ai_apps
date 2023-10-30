@@ -130,6 +130,7 @@ class _HomePageState extends State<HomePage> {
       await context.read<AiCubit>().getAi(
           widget.token, (selectedRandomId != null) ? selectedRandomId! : time!);
       showChat = true;
+      showContoh = true;
       return value;
     } else {
       throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
@@ -157,6 +158,7 @@ class _HomePageState extends State<HomePage> {
       await context.read<AiCubit>().getAi(
           widget.token, (selectedRandomId != null) ? selectedRandomId! : time!);
       showChat = true;
+      showContoh = true;
       return value;
     } else {
       throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
@@ -184,6 +186,7 @@ class _HomePageState extends State<HomePage> {
       await context.read<AiCubit>().getAi(
           widget.token, (selectedRandomId != null) ? selectedRandomId! : time!);
       showChat = true;
+      showContoh = true;
       return value;
     } else {
       throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
@@ -211,6 +214,7 @@ class _HomePageState extends State<HomePage> {
       await context.read<AiCubit>().getAi(
           widget.token, (selectedRandomId != null) ? selectedRandomId! : time!);
       showChat = true;
+      showContoh = true;
       return value;
     } else {
       throw "Error ${res.statusCode} => ${body["meta"]["message"]}";
@@ -475,12 +479,63 @@ class _HomePageState extends State<HomePage> {
                       right: 0,
                       bottom: 95,
                       child: LoaderOverlay(
-                        overlayColor: Colors.grey.withOpacity(0.5),
+                        overlayColor: Colors.transparent,
                         useDefaultLoading: false,
-                        overlayWidget: Center(
-                          child: CircularProgressIndicator(
-                            color: (darkLight != true) ? textDark : warnaUtama,
-                          ),
+                        overlayWidget: Stack(
+                          children: [
+                            Positioned(
+                              bottom: 35,
+                              child: Container(
+                                height: 60,
+                                width: MediaQuery.of(context).size.width,
+                                color: (darkLight != true)
+                                    ? dasarDark
+                                    : chatUserLight,
+                                padding: EdgeInsets.only(left: 15, bottom: 10),
+                                child: Container(
+                                  constraints:
+                                  const BoxConstraints(maxWidth: 800),
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 60,
+                                  // padding:
+                                  //     const EdgeInsets.only(left: 15, right: 15),
+                                  color: (darkLight != true)
+                                      ? dasarDark
+                                      : chatUserLight,
+                                  child: Row(
+                                    // mainAxisAlignment: MainAxisAlignment.start,
+                                    // crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Image.asset('assets/parentoday.png',
+                                          scale: 2),
+                                      const SizedBox(width: 10),
+                                      Container(
+                                        constraints:
+                                        const BoxConstraints(maxWidth: 800),
+                                        width: MediaQuery.of(context).size.width -
+                                            69,
+                                        child: TypeWriterText(
+                                          text: Text(
+                                            'Sedang mempersiapkan jawaban...',
+                                            style: GoogleFonts.poppins().copyWith(
+                                              fontWeight: FontWeight.w300,
+                                              color: (darkLight != true)
+                                                  ? textDark
+                                                  : textLight3,
+                                              height: 1.7,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          repeat: true,
+                                          duration: Duration(milliseconds: 40),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         child: Stack(
                           alignment: Alignment.center,
@@ -558,6 +613,7 @@ class _HomePageState extends State<HomePage> {
                                                                 isLoading =
                                                                     true;
                                                                 show = true;
+                                                                showContoh = true;
                                                                 context
                                                                     .loaderOverlay
                                                                     .show();
@@ -569,8 +625,6 @@ class _HomePageState extends State<HomePage> {
                                                                   isLoading =
                                                                       false;
                                                                   show = false;
-                                                                  showContoh =
-                                                                      true;
                                                                   context
                                                                       .loaderOverlay
                                                                       .hide();
@@ -613,6 +667,7 @@ class _HomePageState extends State<HomePage> {
                                                                 isLoading =
                                                                     true;
                                                                 show = true;
+                                                                showContoh = true;
                                                                 context
                                                                     .loaderOverlay
                                                                     .show();
@@ -624,8 +679,6 @@ class _HomePageState extends State<HomePage> {
                                                                   isLoading =
                                                                       false;
                                                                   show = false;
-                                                                  showContoh =
-                                                                      true;
                                                                   context
                                                                       .loaderOverlay
                                                                       .hide();
@@ -669,6 +722,7 @@ class _HomePageState extends State<HomePage> {
                                                                 isLoading =
                                                                     true;
                                                                 show = true;
+                                                                showContoh = true;
                                                                 context
                                                                     .loaderOverlay
                                                                     .show();
@@ -680,8 +734,6 @@ class _HomePageState extends State<HomePage> {
                                                                   isLoading =
                                                                       false;
                                                                   show = false;
-                                                                  showContoh =
-                                                                      true;
                                                                   context
                                                                       .loaderOverlay
                                                                       .hide();
@@ -1275,6 +1327,7 @@ class _HomePageState extends State<HomePage> {
                                                 isLoading = true;
                                                 show = true;
                                                 context.loaderOverlay.show();
+                                                kosong = true;
                                               });
                                               await cari().whenComplete(() {
                                                 setState(() {
@@ -1283,6 +1336,7 @@ class _HomePageState extends State<HomePage> {
                                                   context.loaderOverlay.hide();
                                                   pertanyaan.text = '';
                                                   showContoh = true;
+                                                  kosong = false;
                                                 });
                                               });
                                             }
@@ -1358,6 +1412,7 @@ class _HomePageState extends State<HomePage> {
                                               isLoading = true;
                                               show = true;
                                               context.loaderOverlay.show();
+                                              kosong = true;
                                             });
                                             await cari().whenComplete(() {
                                               setState(() {
@@ -1366,6 +1421,7 @@ class _HomePageState extends State<HomePage> {
                                                 context.loaderOverlay.hide();
                                                 pertanyaan.text = '';
                                                 showContoh = true;
+                                                kosong = false;
                                               });
                                             });
                                           }

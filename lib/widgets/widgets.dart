@@ -1,12 +1,14 @@
 import 'package:ai_apps/pages/pages.dart';
 import 'package:ai_apps/themes/color.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:typewritertext/typewritertext.dart';
 import '../models/data_user.dart';
 import '../models/models.dart';
 part 'chat_card.dart';

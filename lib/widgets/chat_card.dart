@@ -67,24 +67,42 @@ class ChatRobotCard extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(15),
       color: (darkLight != true) ? dasarDark : chatUserLight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: [
-          Image.asset('assets/parentoday.png', scale: 2),
-          const SizedBox(width: 10),
-          Container(
-            width: MediaQuery.of(context).size.width - 65,
-            child: Text(
-              aiModel.content ?? '',
-              style: GoogleFonts.poppins().copyWith(
-                fontWeight: FontWeight.w300,
-                color: (darkLight != true) ? textDark : textLight3,
-                height: 1.7,
-                fontSize: 12,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.asset('assets/parentoday.png', scale: 2),
+              const SizedBox(width: 10),
+              SelectionArea(
+                child: Container(
+                  width: MediaQuery.of(context).size.width - 65,
+                  child: TypeWriterText.builder(
+                    aiModel.content ?? '',
+                    duration: const Duration(milliseconds: 10),
+                    builder: (context, value) {
+                      return AutoSizeText(
+                        value,
+                        style: GoogleFonts.poppins().copyWith(
+                          fontWeight: FontWeight.w300,
+                          color: (darkLight != true) ? textDark : textLight3,
+                          height: 1.7,
+                          fontSize: 12,
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
+          (kosong == true)
+              ? SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+          )
+              : Container(),
         ],
       ),
     );
